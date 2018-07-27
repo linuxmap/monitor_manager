@@ -1,0 +1,23 @@
+		.margin-top{
+			    margin-top: 44px;
+			    background: #fff;
+			    border-right: 2px #ddd solid;
+		}
+		.background{background: #f2f2f2;}
+		.jiedian{
+			margin-top:20px;
+			padding:10px;
+			background-image:-webkit-linear-gradient(to right, #dfeffe, #fff);
+  			background-image:linear-gradient(to right, #dfeffe, #fff);
+		}
+		.jd-title{
+			height:20px;
+			font-weight: 600px;
+			border-left:4px #0077dd solid;
+			margin-left:20px;
+			padding-left:10px;
+		}
+		#tree{
+		    padding: 20px;
+		    height:85%;
+		}

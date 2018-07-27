@@ -1,0 +1,117 @@
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td {
+	margin: 0;
+	padding: 0;
+}
+  		#meetingRoomDesc{
+			height: 100px;
+		    width: 520px;
+		    float: left;
+		}
+		textarea{
+			resize:none;
+			padding:10px;
+			/* margin-top: 5px; */
+			border-radius: 3px;
+		    float: left;
+   			width: 310px;
+   			height: 100px;
+			} 
+		#miaoshu{
+			display: block;
+		    float: left;
+		    width: 100px;
+		    margin-top: 10px;
+		    text-align: right;
+		    font-size: 12px;
+		    margin-right: 10px;
+		    color:#000;
+		}
+		input{
+			border-radius: 3px;
+		    padding-left: 10px;
+		    height: 28px;
+		    width:310px;
+		}
+		
+		td{
+    		/* padding-top: 5px; */
+    		line-height: 24px;
+    		 /* width:70px; */ 
+		}
+		select{
+			line-height: 30px;
+		    height: 28px;
+		    border-radius: 3px;
+		    width: 220px;
+		    padding-left:10px;
+		    margin-left:-3px;
+		}
+		.btn-foot{
+		    display: inline-block;
+		    width: 100%;
+		    text-align: center;
+		    margin-top: 30px;
+		}
+		#save{
+			background: #399efc;
+		    border: 0;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #fff;
+		    margin: 0 10px;
+		}
+		#cancel{
+			background: #fff;
+		    border: 1px #399efc solid ;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #399efc;
+		    margin: 0 10px;
+		}
+		#close{
+			background: #fff;
+		    border: 1px #399efc solid ;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #399efc;
+		    margin: 0 20px;
+		}
+		/* ---------------------------ting----------------------------*/
+		label{
+			 font-weight:500; 
+			margin-right:10px;
+			width: 100px;
+   			text-align: right;
+   			color:#000;
+		}
+		table{
+			font-size:12px;
+		}

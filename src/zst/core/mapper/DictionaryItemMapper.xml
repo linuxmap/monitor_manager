@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.DictionaryItemMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.DictionaryItem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="dictionary_id" property="dictionaryId" jdbcType="VARCHAR" />
+    <result column="item_status" property="itemStatus" jdbcType="VARCHAR" />
+    <result column="item_desc" property="itemDesc" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id != null ">
+		AND id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="itemId != null and itemId!=''">
+		AND item_id = #{itemId,jdbcType=VARCHAR}
+	</if>
+	<if test="itemName != null and itemName !=''">
+		AND item_name = #{itemName,jdbcType=VARCHAR}
+	</if>
+	<if test="dictionaryId != null and dictionaryId!=''">
+		AND dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+	</if>
+	<if test="itemStatus != null and itemStatus !=''">
+		AND item_status = #{itemStatus,jdbcType=VARCHAR}
+	</if>
+	<if test="itemDesc != null and itemDesc !=''">
+		AND item_desc = #{itemDesc,jdbcType=VARCHAR}
+	</if>
+	<if test="createUserId != null ">
+		AND create_user_id = #{createUserId,jdbcType=INTEGER}
+	</if>
+	<if test="createTime != null and createTime !=''">
+		AND create_time = #{createTime,jdbcType=TIMESTAMP}
+	</if>
+	<if test="updateTime != null and updateTime !=''">
+		AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+	</if>
+  </sql>
+  <sql id="Base_Column_List" >
+    id,item_id,item_name,dictionary_id, 
+    (CASE item_status 
+    when '1' then '有效'
+    when '0' then '无效'
+    end
+    )item_status, 
+    item_desc, create_user_id, create_time,update_time
+  </sql>
+  <select id="selectByObj" resultMap="BaseResultMap" parameterType="zst.core.entity.DictionaryItem" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_dictionary_item
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.DictionaryItem" resultType="java.lang.Long">
+		SELECT COUNT(1) COUN FROM zst_dictionary_item
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.DictionaryItem" resultMap="BaseResultMap">		
+		select 
+		<include refid="Base_Column_List" />
+		from zst_dictionary_item
+		<include refid="Example_Where_Clause" />
+		order by create_time DESC
+		limit #{pagestart},#{pageend}
+  </select>
+  <!--模糊查询总和  -->
+  <select id="selectFuzzyCountByObj" parameterType="zst.core.entity.DictionaryItem" resultType="long">
+	SELECT COUNT(1) COUN
+	FROM zst_dictionary_item item
+	LEFT JOIN zst_dictionary_info info ON item.dictionary_id=info.dictionary_id
+	where 1=1
+	<if test="id != null ">
+		AND item.id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="itemId != null and itemId!=''">
+		AND item.item_id = #{itemId,jdbcType=VARCHAR}
+	</if>
+	<if test="itemName != null and itemName !=''">
+		AND item.item_name LIKE CONCAT('%',#{itemName,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="dictionaryId != null and dictionaryId!=''">
+		AND item.dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+	</if>
+  </select>
+  <!-- 模糊分页查询 -->
+  <select id="selectFuzzyListByObj" parameterType="zst.core.entity.DictionaryItem" resultMap="BaseResultMap">
+    SELECT
+	item.id, item.item_id, item.item_name, item.dictionary_id,
+	(CASE item.item_status  WHEN '1' THEN '有效' WHEN '0' THEN '无效' END )item_status,
+	item.item_desc, item.create_user_id, item.create_time,
+	item.update_time
+	FROM zst_dictionary_item item
+	LEFT JOIN zst_dictionary_info info ON item.dictionary_id=info.dictionary_id
+	where 1=1
+	<if test="id != null ">
+		AND item.id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="itemId != null and itemId!=''">
+		AND item.item_id = #{itemId,jdbcType=VARCHAR}
+	</if>
+	<if test="itemName != null and itemName !=''">
+		AND item.item_name LIKE CONCAT('%',#{itemName,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="dictionaryId != null and dictionaryId!=''">
+		AND item.dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+	</if>
+	<if test="pagestart>-1 and pageend>0">
+		limit #{pagestart},#{pageend}
+	</if>
+  </select>
+  <!-- 查询所有 -->
+  <select id="selectAllByObj" parameterType="dictionaryItem" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+			from zst_dictionary_item
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!-- 通过设备类型条目id查询对应的设备厂家 -->
+  <select id="selectListByEquType" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM zst_dictionary_item  WHERE item_status=1 and item_id IN 
+  	( SELECT DISTINCT(equ_factory) FROM sys_equipment_model WHERE equ_type = #{equType,jdbcType=VARCHAR} )
+  </select>
+  <insert id="insertBySelective" parameterType="zst.core.entity.DictionaryItem" >
+    insert into zst_dictionary_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="dictionaryId != null">
+      	dictionary_id,
+      </if>
+      <if test="itemStatus != null" >
+        item_status,
+      </if>
+      <if test="itemDesc != null" >
+        item_desc,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryId != null" >
+        #{dictionaryId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemStatus != null" >
+        #{itemStatus,jdbcType=INTEGER},
+      </if>
+      <if test="itemDesc != null" >
+        #{itemDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.DictionaryItem" >
+    update zst_dictionary_item
+    <set >
+      <if test="itemId != null" >
+       item_id = #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryId != null" >
+        dictionary_id = #{dictionaryId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemStatus != null" >
+        item_status = #{itemStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="itemDesc != null" >
+        item_desc = #{itemDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

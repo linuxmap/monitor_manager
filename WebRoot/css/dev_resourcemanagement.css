@@ -1,0 +1,25 @@
+body{
+	height:100%;
+	width:100%;
+	font-size: 12px;
+}
+.
+label{
+	font-size: 12px;
+	font-weight: 500;
+	color:#000;
+	text-align: right;
+}
+
+.add_bigbox{
+		margin-top:20px;
+}
+.add_Mor{
+	margin:0 auto;
+	width: 400px;
+}
+.pull-right{margin-top:3px}
+/*=======================defaul冲突样式，引入可删除以下==================================*/
+.red{
+	color: red;
+} 

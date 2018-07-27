@@ -1,0 +1,777 @@
+/****************登录样式 文件*****************/
+/********* 
+菜单样式对应className
+业务系统:
+businessSystem-metting    会议审批
+businessSystem-module     会议信息
+businessSystem-control    会议服务
+businessSystem-Video      调度管理
+businessSystem-Audio      设备控制
+businessSystem-Recording  设备检测
+businessSystem-monitoring 录播控制
+businessSystem-Conferencetemplate 会议模板
+businessSystem-Recordview   录播查看
+
+资源管理:
+resourceManage-metting         会场管理
+resourceManage-signalsource    信源管理
+resourceManage-means           mcu参数模板
+resourceManage-dev             设备管理
+resourceManage-polling         轮询模板
+
+统计分析:
+statsAnalysis-Statistics           签到统计
+statsAnalysis-metStatistics        会议统计
+statsAnalysis-roomStatistics       会场统计
+statsAnalysis-devStatistics        设备统计
+statsAnalysis-stopStatistics       故障统计
+statsAnalysis-operationStatistics  运维统计
+statsAnalysis-alarmStatistics      告警统计
+
+配置管理:
+config-devicetype				  设备类型配置
+config-Monitoringconfiguration   监控配置
+config-Supervisorconfiguration	   预监配置
+config-Terminalsorting		               终端排序
+config-Buildingconfiguration     楼宇配置
+config-systemconfiguration       系统配置
+config-Functionconfiguration     功能配置
+config-Processconfiguration      流程管理
+config-Message					   流程管理
+
+系统管理:
+systemManage-usermanagement            用户管理
+systemManage-Organization			         组织机构
+systemManage-datadictionary            数据字典
+systemManage-systemconfiguration       系统配置
+systemManage-conventionalarrangement   备份设置
+systemManage-Privilegemanagement	         权限管理
+systemManage-systemconfiguration       菜单管理
+systemManage-menuAuthority             功能权限
+systemManage-log		   			        日志管理
+systemManage-smsQuery  	   			        短信记录查询
+
+********/
+
+body,div,ul,ol,li,dl,dt,dd,span,a,h1,h2,h3,h4,h5,h6,form,input,textarea,p,th,td,select,header,footer,section,nav,article{margin: 0; padding: 0;}
+body{background-color: #F2F2F2;font: normal 400 16px/1em "微软雅黑",Simsun,arial,sans-serif; display: block;}
+html:focus,body:focus{outline: none;}
+html,body{height: 100%;}
+button:focus {
+	border: 1px solid #fff;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	/* background: #f3f3f3; */
+}
+
+a:visited,
+a:link,
+a:hover,
+a:active,
+a {
+	text-decoration: none;
+	font-size: 12px;
+}
+
+
+/**----------------------------经典布局分界-----------------------*/
+
+.page-sidebar {
+	position: absolute;
+	height: 100%;
+	width: 300px;
+}
+
+.page-sidebar-fixed .page-sidebar {
+	position: fixed !important;
+	top: 41px;
+}
+
+.page-content {
+	height: 100%;
+}
+
+.page-content {
+	min-height: auto;
+}
+.container-fluid {
+	margin: 0;
+	padding: 0;
+}
+.panel-body {
+	padding: 10px 15px;
+}
+.top {
+	width: 100%;
+	height: 50px;
+	/* background: #096; */
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.center {
+	width: 100%;
+	background: #fff;
+	position: absolute;
+	top: 50px;
+	bottom: 0;
+	overflow: hidden;
+}
+.left {
+	width: 300px;
+	height: 100%;
+	background: #fff;
+	float: left;
+}
+.right {
+	background: #f2f2f2;
+	overflow: hidden;
+	height: 100%;
+}
+/*---------------------------------分界线-----------------------------*/
+.embed-responsive-4by3 {
+	background: #f3f3f3;
+	height:100%;
+}
+
+.page-sidebar-menu {
+	overflow-x: hidden;
+	height: 84%;
+}
+
+.btn0 {
+	padding: 5px 8px;
+}
+
+.btn1 {
+	padding: 3px 5px;
+}
+
+.bb {
+	background: #fff;
+	box-shadow: 0 0 2px #e6e6e6;
+}
+
+.topnav {
+	padding-top: 15px
+}
+
+.topnav li {
+	float: left;
+	color: #fff;
+}
+
+.topnav .dd:visited,
+.dd:link,
+.dd:hover,
+.dd:active,
+.dd {
+	text-decoration: none;
+	font-size: 12px;
+	background: transparent!important;
+	display: block;
+	color: #fff;
+	margin: 0;
+	padding: 2px 10px!important;
+}
+
+.navbar {
+	background: url('../img/Top_image_bannner.png');
+	background-size: 100%;
+	margin: 0;
+	border-radius: 0!important;
+}
+
+.topdl dt {
+	border-radius: 50%;
+	width: 48px;
+	height: 48px;
+}
+.topdl dt img{
+	width:100%;
+	height:100%;
+	background-size: 100%;
+}
+.topdl dd {
+	/* margin-left: 3px; */
+	color: #fff;
+	padding-top: 10px;
+	font-size: 18px;
+}
+.navbar-inner {
+	margin: 0;
+}
+.dl-pading {
+	width: 100%;
+    overflow: hidden;
+}
+.dl-pading dt{width:48px;height:48px;border-radius: 50%;}
+.dl-pading dt img{
+	height:100%;
+	width:100%;
+	background-size:100% 100%;
+}
+.margin-dd {
+	margin-left: 10px;
+}
+.fixed-top {
+	position: absolute;
+	top: 10px;
+	left: 272px;
+}
+.fixed-top0 {
+	position: absolute;
+	top: 8px;
+	left: 219px;
+}
+.left-mar {
+	 margin: 5px 0;
+	height: 40px;
+}
+.left-mar img{
+			width:28px;
+			height:28px;
+		}
+.fold {
+	height: 100%;
+	width: 30px;
+	position: relative;
+	top: 0px;
+	float: left;
+	display: none;
+}
+
+.list-btn {
+	display: inline-block;
+	background: #fff;
+}
+
+.edit {
+	padding-right: 10px;
+	padding-top: 10px;
+}
+
+.row {
+	margin-right: 0;
+	margin-left: -15px;
+}
+
+#botnav {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	z-index: 10;
+}
+#ul-hidden{
+	position: absolute;
+	right:0;
+	z-index: 999;
+}
+
+/*--------------------------list-module--------------------*/
+.well{
+		border:0;
+	    border-bottom: 0.5px solid #e7e7e7;
+	}
+.well img {
+	width: 50px;
+	height: 50px;
+}
+
+.well dt {
+	width: 70px;
+	height: 71px;
+	border-radius: 100%;
+}
+
+.well dt a {
+	display: block;
+	width: 70px;
+	height: 71px;
+	border-radius: 100%;
+}
+
+.well {
+	background: #f5f6fb;
+	margin-bottom: 0;
+}
+
+.well dd {
+	display: block;
+	width: 72px;
+	text-align: center;
+	position: relative;
+	bottom: 13px;
+	font-size: 12px;
+}
+
+.layui-colla-content {
+	margin: 0;
+	padding: 0;
+}
+
+.layui-colla-title {
+	background: #fff;
+	font-size: 16px;
+	border-bottom: 0.5px solid #eee;
+}
+.layui-colla-item{
+			border:0;
+		}
+.layui-collapse {
+	border: 0;
+}
+
+.panel {
+	margin-bottom: 1px;
+}
+
+.btn {
+	margin-bottom: 1px;
+}
+/*----------------------businessSystem-nor-业务系统-------------------------*/
+.businessSystem-metting {/*会议审批*/
+	background: url('../img/module/nor/Nav_module_approval_nor.png') no-repeat center center;
+}
+.businessSystem-module {/*会议信息*/
+	background: url('../img/module/nor/Nav_module_meeting_nor.png') no-repeat center center;
+}
+.businessSystem-control {/*会议服务*/
+	background: url('../img/module/nor/Nav_module_service_nor.png') no-repeat center center;
+}
+.businessSystem-Video {/*调度管理*/
+	background: url('../img/module/nor/Nav_module_video scheduling_nor.png') no-repeat center center;
+}
+.businessSystem-Audio {/*设备控制*/
+	background: url('../img/module/nor/Nav_module_device control_nor.png') no-repeat center center;
+}
+.businessSystem-Recording {/*设备检测*/
+	background: url('../img/module/nor/Nav_module_equipment monitoring_nor.png') no-repeat center center;
+}
+.businessSystem-monitoring {/*录播控制*/
+	background: url('../img/module/nor/Nav_module_record control_nor.png') no-repeat center center;
+}
+.businessSystem-Conferencetemplate {/*会议模板*/
+	background: url('../img/module/nor/businessSystem-Conferencetemplate_nor.png') no-repeat center center;
+}
+.businessSystem-Recordview {/*录播查看*/
+	background: url('../img/module/nor/businessSystem-Recordview_nor.png') no-repeat center center;
+}
+/*----------------------businessSystem-hover-------------------------*/
+.businessSystem-metting:hover {
+	background: url('../img/module/hover/Nav_module_approval_hover.png') no-repeat center center;
+}
+.businessSystem-module:hover {
+	background: url('../img/module/hover/Nav_module_meeting_hover.png') no-repeat center center;
+}
+.businessSystem-control:hover {
+	background: url('../img/module/hover/Nav_module_service_hover.png') no-repeat center center;
+}
+.businessSystem-Video:hover {
+	background: url('../img/module/hover/Nav_module_video scheduling _hover.png') no-repeat center center;
+}
+.businessSystem-Audio:hover {
+	background: url('../img/module/hover/Nav_module_device-control_hover@2x.png') no-repeat center center;
+}
+.businessSystem-Recording:hover {
+	background: url('../img/module/hover/Nav_module_equipment monitoring_hover.png') no-repeat center center;
+}
+.businessSystem-monitoring:hover {
+	background: url('../img/module/hover/Nav_module_record control_hover.png') no-repeat center center;
+}
+.businessSystem-Conferencetemplate:hover {/*会议模板*/
+	background: url('../img/module/hover/businessSystem-Conferencetemplate_hover.png') no-repeat center center;
+}
+.businessSystem-Recordview:hover {/*录播查看*/
+	background: url('../img/module/hover/businessSystem-Recordview_hover.png') no-repeat center center;
+}
+/*----------------------businessSystem-sel-------------------------*/
+
+dl.active .businessSystem-metting {
+	background: url('../img/module/sel/Nav_module_approval_sel.png') no-repeat center center;
+}
+dl.active .businessSystem-module {
+	background: url('../img/module/sel/Nav_module_meeting_sel.png') no-repeat center center;
+}
+dl.active .businessSystem-control {
+	background: url('../img/module/sel/Nav_module_service_sel.png') no-repeat center center;
+}
+dl.active .businessSystem-Video {
+	background: url('../img/module/sel/Nav_module_video scheduling_sel.png') no-repeat center center;
+}
+dl.active .businessSystem-Audio {
+	background: url('../img/module/sel/Nav_module_device control_sel.png') no-repeat center center;
+}
+dl.active .businessSystem-Recording {
+	background: url('../img/module/sel/Nav_module_equipment monitoring_sel.png') no-repeat center center;
+}
+dl.active .businessSystem-monitoring {
+	background: url('../img/module/sel/Nav_module_record control_sel.png') no-repeat center center;
+}
+dl.active .businessSystem-Conferencetemplate {/*会议模板*/
+	background: url('../img/module/sel/businessSystem-Conferencetemplate_sel.png') no-repeat center center;
+}
+dl.active .businessSystem-Recordview {/*录播查看*/
+	background: url('../img/module/sel/businessSystem-Recordview_sel.png') no-repeat center center;
+}
+/*-------------------------statsAnalysis-nor-统计分析-------------------------------*/
+
+.statsAnalysis-Statistics {/*签到统计*/
+	background: url('../img/module/nor/Nav_analysis_sign_nor.png') no-repeat center center;
+}
+
+.statsAnalysis-metStatistics {/*会议统计*/
+	background: url('../img/module/nor/Nav_analysis_meeting_nor.png') no-repeat center center;
+}
+
+.statsAnalysis-roomStatistics {/*会场统计*/
+	background: url('../img/module/nor/Nav_analysis_meeting room_nor.png') no-repeat center center;
+}
+
+.statsAnalysis-devStatistics {/*设备统计*/
+	background: url('../img/module/nor/Nav_analysis_equipment_nor.png') no-repeat center center;
+}
+
+.statsAnalysis-stopStatistics {/*故障统计*/
+	background: url('../img/module/nor/Nav_analysis_fault_nor.png') no-repeat center center;
+}
+
+.statsAnalysis-operationStatistics {/*日志统计*/
+	background: url('../img/module/nor/Nav_analysis_Journal_nor.png') no-repeat center center;
+}
+
+.statsAnalysis-alarmStatistics {/*告警统计*/
+	background: url('../img/module/nor/Nav_configure_function_nor.png') no-repeat center center;
+}
+
+
+/*-------------------------statsAnalysis-hover-------------------------------*/
+
+.statsAnalysis-Statistics:hover {
+	background: url('../img/module/hover/Nav_analysis_sign_hover.png') no-repeat center center;
+}
+
+.statsAnalysis-metStatistics:hover {
+	background: url('../img/module/hover/Nav_analysis_meeting_hover.png') no-repeat center center;
+}
+
+.statsAnalysis-roomStatistics:hover {
+	background: url('../img/module/hover/Nav_analysis_meeting room_hover.png') no-repeat center center;
+}
+
+.statsAnalysis-devStatistics:hover {
+	background: url('../img/module/hover/Nav_analysis_equipment_hover.png') no-repeat center center;
+}
+
+.statsAnalysis-stopStatistics:hover {
+	background: url('../img/module/hover/Nav_analysis_fault_hover.png') no-repeat center center;
+}
+
+.statsAnalysis-operationStatistics:hover {
+	background: url('../img/module/hover/Nav_analysis_Journal_hover.png') no-repeat center center;
+}
+
+.statsAnalysis-alarmStatistics:hover {
+	background: url('../img/module/hover/Nav_configure_function_hover.png') no-repeat center center;
+}
+
+
+/*-------------------------statsAnalysis-sel-------------------------------*/
+
+dl.active .statsAnalysis-Statistics {
+	background: url('../img/module/sel/Nav_analysis_sign_sel.png') no-repeat center center;
+}
+
+dl.active .statsAnalysis-metStatistics {
+	background: url('../img/module/sel/Nav_analysis_meeting_sel.png') no-repeat center center;
+}
+
+dl.active .statsAnalysis-roomStatistics {
+	background: url('../img/module/sel/Nav_analysis_meeting room_sel.png') no-repeat center center;
+}
+
+dl.active .statsAnalysis-devStatistics {
+	background: url('../img/module/sel/Nav_analysis_equipment_sel.png') no-repeat center center;
+}
+
+dl.active .statsAnalysis-stopStatistics {
+	background: url('../img/module/sel/Nav_analysis_fault_sel.png') no-repeat center center;
+}
+
+dl.active .statsAnalysis-operationStatistics {
+	background: url('../img/module/sel/Nav_analysis_Journal_sel.png') no-repeat center center;
+}
+
+dl.active .statsAnalysis-alarmStatistics {
+	background: url('../img/module/sel/Nav_configure_function_sel.png') no-repeat center center;
+}
+
+
+/*---------------------------resourceManage-nor -资源管理-------------------------*/
+
+.resourceManage-metting {/*会场管理*/
+	background: url('../img/module/nor/Nav_resource_meeting room_nor.png') no-repeat center center;
+}
+.resourceManage-signalsource {/*信源管理*/
+	background: url('../img/module/nor/Nav_resource_signal source_nor.png') no-repeat center center;
+}
+
+.resourceManage-means {/*设备管理*/
+	background: url('../img/module/nor/Nav_resource_template_nor.png') no-repeat center center;
+}
+.resourceManage-dev {/*mcu参数模板*/
+	background: url('../img/module/nor/Nav_resource_device management_nor.png') no-repeat center center;
+}
+.resourceManage-polling {/*轮询*/
+	background: url('../img/module/nor/resourceManage-polling_nor.png') no-repeat center center;
+}
+/*---------------------------resourceManage-hover-------------------------*/
+
+.resourceManage-metting:hover {
+	background: url('../img/module/hover/Nav_resource_meeting room management_hover.png') no-repeat center center;
+}
+.resourceManage-signalsource:hover {
+	background: url('../img/module/hover/Nav_resource_signal source_hover.png') no-repeat center center;
+}
+
+.resourceManage-means:hover {
+	background: url('../img/module/hover/Nav_resource_template_hover.png') no-repeat center center;
+}
+.resourceManage-dev:hover {
+	background: url('../img/module/hover/Nav_resource_device management_hover.png') no-repeat center center;
+}
+.resourceManage-polling:hover {/*轮询*/
+	background: url('../img/module/hover/resourceManage-polling_hover.png') no-repeat center center;
+}
+/*---------------------------resourceManage-sel-------------------------*/
+
+dl.active .resourceManage-metting {
+	background: url('../img/module/sel/Nav_resource_meeting room management_sel.png') no-repeat center center;
+}
+
+dl.active .resourceManage-signalsource {
+	background: url('../img/module/sel/Nav_resource_signalsource_sel.png') no-repeat center center;
+}
+dl.active .resourceManage-means {
+	background: url('../img/module/sel/Nav_resource_template_sel.png') no-repeat center center;
+}
+dl.active .resourceManage-dev {
+	background: url('../img/module/sel/Nav_resource_device management_sel.png') no-repeat center center;
+}
+dl.active .resourceManage-polling {/*轮询*/
+	background: url('../img/module/sel/resourceManage-polling_sel.png') no-repeat center center;
+}
+/*----------------------config-nor-配置管理-----------------------------------*/
+ .config-devicetype{/*设备类型配置*/
+	background: url('../img/module/nor/Nav_configure_equipment_nor.png') no-repeat center center;
+}
+.config-Monitoringconfiguration{/*监控配置*/
+	background: url('../img/module/nor/Nav_analysis_alarm_nor.png') no-repeat center center;
+}
+.config-Supervisorconfiguration{/*遇见配置*/
+	background: url('../img/module/nor/Nav_configure_supervision_nor.png') no-repeat center center;
+}
+ .config-Terminalsorting{/*终端排序*/
+	background: url('../img/module/nor/Nav_configure_terminal_nor.png') no-repeat center center;
+}
+.config-Buildingconfiguration{/*楼宇配置*/
+	background: url('../img/module/nor/Nav_configure_building_nor.png') no-repeat center center;
+}
+ .config-systemconfiguration{/*系统配置*/
+	background: url('../img/module/nor/Nav_configure_system_nor.png') no-repeat center center;
+}
+ .config-Functionconfiguration{/*功能配置*/
+	background: url('../img/module/nor/Nav_configure_Monitor_nor.png') no-repeat center center;
+}
+ .config-Processconfiguration{/*流程管理*/
+	background: url('../img/module/nor/Nav_configure_process_nor.png') no-repeat center center;
+}
+
+/*----------------------config-hover---------------------------------*/
+.config-devicetype:hover{
+	background: url('../img/module/hover/Nav_configure_equipment_hover.png') no-repeat center center;
+}
+.config-Monitoringconfiguration:hover{
+	background: url('../img/module/hover/Nav_analysis_alarm_hover.png') no-repeat center center;
+}
+.config-Supervisorconfiguration:hover{
+	background: url('../img/module/hover/Nav_configure_supervision_hover.png') no-repeat center center;
+}
+.config-Terminalsorting:hover{
+	background: url('../img/module/hover/Nav_configure_terminal_hover.png') no-repeat center center;
+}
+.config-Buildingconfiguration:hover{
+	background: url('../img/module/hover/Nav_configure_building_hover.png') no-repeat center center;
+}
+.config-systemconfiguration:hover{
+	background: url('../img/module/hover/Nav_configure_system_hover.png') no-repeat center center;
+}
+.config-Functionconfiguration:hover{
+	background: url('../img/module/hover/Nav_configure_Monitor_hover.png') no-repeat center center;
+}
+.config-Processconfiguration:hover{
+	background: url('../img/module/hover/Nav_configure_process_hover.png') no-repeat center center;
+}
+/*----------------------m5---sel-----------------------------------------------------*/
+dl.active .config-devicetype{
+	background: url('../img/module/sel/Nav_configure_equipment_sel.png') no-repeat center center;
+}
+dl.active .config-Monitoringconfiguration{
+	background: url('../img/module/sel/Nav_analysis_alarm_sel.png') no-repeat center center;
+}
+dl.active .config-Supervisorconfiguration{
+	background: url('../img/module/sel/Nav_configure_supervision_sel.png') no-repeat center center;
+}
+dl.active .config-Terminalsorting{
+	background: url('../img/module/sel/Nav_configure_terminal_sel.png') no-repeat center center;
+}
+dl.active .config-Buildingconfiguration{
+	background: url('../img/module/sel/Nav_configure_building_sel.png') no-repeat center center;
+}
+dl.active .config-systemconfiguration{
+	background: url('../img/module/sel/Nav_configure_system_sel.png') no-repeat center center;
+}
+dl.active .config-Functionconfiguration{
+	background: url('../img/module/sel/Nav_configure_Monitor_sel.png') no-repeat center center;
+}
+dl.active .config-Processconfiguration{
+	background: url('../img/module/sel/Nav_configure_process_sel.png') no-repeat center center;
+}
+
+/*----------------------systemManage-nor==系统管理-=====================-------------------*/
+
+.systemManage-usermanagement {/*用户管理*/
+	background: url('../img/module/nor/Nav_system_user management_nor.png') no-repeat center center;
+}
+.systemManage-Organization{/*组织机构*/
+	background: url('../img/module/nor/Nav_system_organization_nor.png') no-repeat center center;
+}
+.systemManage-Privilegemanagement{/*权限管理*/
+	background: url('../img/module/nor/Nav_system_Jurisdiction_nor.png') no-repeat center center;
+}
+.systemManage-datadictionary {/*数据字典*/
+	background: url('../img/module/nor/Nav_system_data dictionary_nor.png') no-repeat center center;
+}
+
+.systemManage-systemconfiguration {/*菜单管理*/
+	background: url('../img/module/nor/Nav_system_menu_nor.png') no-repeat center center;
+}
+
+.systemManage-menuAuthority {/*功能权限*/
+	background: url('../img/module/nor/Nav_system_gnqx_nor.png') no-repeat center center;
+}
+
+.systemManage-log {/*日志查询*/
+	background: url('../img/module/nor/Nav_system_log_nor.png') no-repeat center center;
+}
+
+.config-Message {/*短信配置*/
+	background: url('../img/module/nor/Nav_system_message_nor.png') no-repeat center center;
+}
+
+.systemManage-smsQuery {/*短信发送记录查询*/
+	background: url('../img/module/nor/Nav_module_dxcx_nor.png') no-repeat center center;
+}
+
+.systemManage-conventionalarrangement {/*备份设置*/
+	background: url('../img/module/nor/Nav_system_backup_nor.png') no-repeat center center;
+}
+
+
+/*----------------------systemManage-hover--------------------*/
+.systemManage-usermanagement:hover {
+	background: url('../img/module/hover/Nav_system_user management_hover.png') no-repeat center center;
+}
+.systemManage-Organization:hover{
+	background: url('../img/module/hover/Nav_system_organization_hover.png') no-repeat center center;
+}
+.systemManage-Privilegemanagement:hover{
+	background: url('../img/module/hover/Nav_system_Jurisdiction_hover.png') no-repeat center center;
+}
+.systemManage-datadictionary:hover {
+	background: url('../img/module/hover/Nav_system_data dictionary_hover.png') no-repeat center center;
+}
+
+.systemManage-systemconfiguration:hover {
+	background: url('../img/module/hover/Nav_system_menu_hover.png') no-repeat center center;
+}
+
+.systemManage-menuAuthority:hover {
+	background: url('../img/module/hover/Nav_system_gnqx_hover.png') no-repeat center center;
+}
+
+.systemManage-log:hover {
+	background: url('../img/module/hover/Nav_system_log_hover.png') no-repeat center center;
+}
+
+.config-Message:hover {
+	background: url('../img/module/hover/Nav_system_message_hover.png') no-repeat center center;
+}
+
+.systemManage-smsQuery:hover {
+	background: url('../img/module/hover/Nav_module_dxcx_hover.png') no-repeat center center;
+}
+
+.systemManage-conventionalarrangement:hover {
+	background: url('../img/module/hover/Nav_system_backup_hover.png') no-repeat center center;
+}
+
+/*----------------------systemManage-sel--------------------*/
+
+dl.active .systemManage-usermanagement {
+	background: url('../img/module/sel/Nav_system_user management_sel.png') no-repeat center center;
+}
+dl.active .systemManage-Organization{
+	background: url('../img/module/sel/Nav_system_organization_sel.png') no-repeat center center;
+}
+dl.active .systemManage-Privilegemanagement{
+	background: url('../img/module/sel/Nav_system_Jurisdiction_sel.png') no-repeat center center;
+}
+dl.active .systemManage-datadictionary {
+	background: url('../img/module/sel/Nav_system_data dictionary_nor.png') no-repeat center center;
+}
+
+dl.active .systemManage-systemconfiguration {
+	background: url('../img/module/sel/Nav_system_menu_sel.png') no-repeat center center;
+}
+
+dl.active .systemManage-log {
+	background: url('../img/module/sel/Nav_system_log_sel.png') no-repeat center center;
+}
+
+dl.active .config-Message {
+	background: url('../img/module/sel/Nav_system_message_sel.png') no-repeat center center;
+}
+
+dl.active .systemManage-smsQuery {
+	background: url('../img/module/sel/Nav_module_dxcx_sel.png') no-repeat center center;
+}
+
+dl.active .systemManage-conventionalarrangement {
+	background: url('../img/module/sel/Nav_system_backup_sel.png') no-repeat center center;
+}
+
+/*----------------------滚动条设置-----------------------------------------------------*/
+::-webkit-scrollbar {
+	width: 3px;
+	/* height: 16px; */
+	background-color: transparent;
+}
+/*定义滚动条的轨道，内阴影及圆角*/
+::-webkit-scrollbar-track {
+	/* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3); */
+	/* border-radius: 10px; */
+	background-color: transparent;
+}
+/*定义滑块，内阴影及圆角*/
+::-webkit-scrollbar-thumb {
+	/*width: 10px;*/
+	/* height: 20px; */
+	border-radius: 3px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+	background-color: #cdcdcd;
+}

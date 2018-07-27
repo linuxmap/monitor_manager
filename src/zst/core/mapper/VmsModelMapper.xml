@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.VmsModelMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.VmsModel" >
+    <id column="model_id" property="modelId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="orderNumber" property="ordernumber" jdbcType="INTEGER" />
+    <result column="deviceType_id" property="devicetypeId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    model_id, product_id, name, flag, orderNumber, deviceType_id
+  </sql>
+  
+    <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="modelId != null ">
+		AND model_id = #{modelId,jdbcType=INTEGER}
+	</if>
+	<if test="productId != null ">
+		AND product_id = #{productId,jdbcType=INTEGER}
+	</if>
+	<if test="name != null and name != '' ">
+		AND name = #{name,jdbcType=VARCHAR}
+	</if>
+	<if test="flag != null ">
+		AND flag = #{flag,jdbcType=INTEGER}
+	</if>
+	<if test="ordernumber != null ">
+		AND orderNumber = #{ordernumber,jdbcType=INTEGER}
+	</if>
+	<if test="devicetypeId != null ">
+		AND deviceType_id = #{devicetypeId,jdbcType=INTEGER}
+	</if>
+  </sql>
+  
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.VmsModel" resultType="long">
+		SELECT COUNT(1) COUN FROM vms_model
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.VmsModel" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from vms_model
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from vms_model
+    where model_id = #{modelId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from vms_model
+    where model_id = #{modelId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.VmsModel" useGeneratedKeys="true" keyProperty="modelId">
+    insert into vms_model (model_id, product_id, name, 
+      flag, orderNumber, deviceType_id
+      )
+    values (#{modelId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{flag,jdbcType=INTEGER}, #{ordernumber,jdbcType=INTEGER}, #{devicetypeId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.VmsModel" useGeneratedKeys="true" keyProperty="modelId">
+    insert into vms_model
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="ordernumber != null" >
+        orderNumber,
+      </if>
+      <if test="devicetypeId != null" >
+        deviceType_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="modelId != null" >
+        #{modelId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="ordernumber != null" >
+        #{ordernumber,jdbcType=INTEGER},
+      </if>
+      <if test="devicetypeId != null" >
+        #{devicetypeId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.VmsModel" >
+    update vms_model
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="ordernumber != null" >
+        orderNumber = #{ordernumber,jdbcType=INTEGER},
+      </if>
+      <if test="devicetypeId != null" >
+        deviceType_id = #{devicetypeId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where model_id = #{modelId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.VmsModel" >
+    update vms_model
+    set product_id = #{productId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=INTEGER},
+      orderNumber = #{ordernumber,jdbcType=INTEGER},
+      deviceType_id = #{devicetypeId,jdbcType=INTEGER}
+    where model_id = #{modelId,jdbcType=INTEGER}
+  </update>
+</mapper>

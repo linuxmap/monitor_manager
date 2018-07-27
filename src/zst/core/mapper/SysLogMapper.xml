@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.SysLogMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.SysLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="operator_date" property="operatorDate" jdbcType="TIMESTAMP" />
+    <result column="operator_module" property="operatorModule" jdbcType="VARCHAR" />
+    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="operator_desc" property="operatorDesc" jdbcType="VARCHAR" />
+    <result column="log_group" property="logGroup" jdbcType="INTEGER" />
+    <result column="log_level" property="logLevel" jdbcType="INTEGER" />
+    <result column="createtime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, operator_date, operator_module, operator_type, operator_desc, log_group, 
+    log_level, createtime
+  </sql>
+  
+  <!-- 日志和user联表查询 -->
+  <resultMap id="LogUserMap" type="zst.core.entity.SysLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="operator_date" property="operatorDate" jdbcType="TIMESTAMP" />
+    <result column="operator_module" property="operatorModule" jdbcType="VARCHAR" />
+    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="operator_desc" property="operatorDesc" jdbcType="VARCHAR" />
+    <result column="log_group" property="logGroup" jdbcType="INTEGER" />
+    <result column="log_level" property="logLevel" jdbcType="INTEGER" />
+    <result column="createtime" property="createTime" jdbcType="TIMESTAMP" />
+    
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="userId != null ">
+		AND l.user_id = #{userId,jdbcType=INTEGER}
+	</if>
+	<if test="operatorModule != null and operatorModule != '' ">
+		AND l.operator_module = #{operatorModule,jdbcType=VARCHAR}
+	</if>
+	<if test="operatorType != null ">
+		AND l.operator_type = #{operatorType,jdbcType=INTEGER}
+	</if>
+	<if test="logGroup != null ">
+		AND l.log_group = #{logGroup,jdbcType=INTEGER}
+	</if>
+	
+	<if test="queryLevelList != null ">
+		AND l.log_level in
+			<foreach item="item" index="index" collection="queryLevelList" open="(" separator="," close=")">
+				#{item,jdbcType=INTEGER}
+			</foreach>
+	</if>
+	
+	<if test="queryStartTime != null ">
+   		<![CDATA[   and DATE_FORMAT(l.operator_date, '%Y-%m-%d %H:%T:%s')>=  DATE_FORMAT(#{queryStartTime}, '%Y-%m-%d %H:%T:%s')   ]]>
+	</if>
+	<if test="queryEndTime != null ">
+	    <![CDATA[  and DATE_FORMAT(l.operator_date, '%Y-%m-%d %H:%T:%s') <= DATE_FORMAT(#{queryEndTime}, '%Y-%m-%d %H:%T:%s')    ]]>
+	</if>
+	<if test="operatorDesc != null and operatorDesc!=''">
+		AND
+			l.operator_desc LIKE "%"#{operatorDesc,jdbcType=VARCHAR}"%" 
+	</if>
+	<if test="userName != null and userName != ''">
+		AND
+			u.user_name LIKE "%"#{userName,jdbcType=VARCHAR}"%" 
+	</if>
+	order by l.operator_date desc
+  </sql>
+  
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.SysLog" resultType="long">
+		SELECT COUNT(1) COUN FROM zst_log l
+		left join
+			zst_user u on l.user_id = u.user_id
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.SysLog" resultMap="LogUserMap">		
+		select
+    		l.id as id, l.user_id as user_id, l.operator_date as operator_date, l.operator_module as operator_module, 
+    		l.operator_type as operator_type, l.operator_desc as operator_desc, l.id as id, l.log_group as log_group, 
+    		l.log_level as log_level, l.createtime as createtime,
+    		u.user_name as user_name
+			from zst_log l
+			left join
+			zst_user u on l.user_id = u.user_id
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="LogUserMap" parameterType="java.lang.Integer" >
+    select
+    		l.id as id, l.user_id as user_id, l.operator_date as operator_date, l.operator_module as operator_module, 
+    		l.operator_type as operator_type, l.operator_desc as operator_desc, l.id as id, l.log_group as log_group, 
+    		l.log_level as log_level, l.createtime as createtime,
+    		u.user_name as user_name
+	from zst_log l
+			left join
+			zst_user u on l.user_id = u.user_id
+    where l.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insertSelective" parameterType="zst.core.entity.SysLog" >
+    insert into zst_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="operatorDate != null" >
+        operator_date,
+      </if>
+      <if test="operatorModule != null" >
+        operator_module,
+      </if>
+      <if test="operatorType != null" >
+        operator_type,
+      </if>
+      <if test="operatorDesc != null" >
+        operator_desc,
+      </if>
+      <if test="logGroup != null" >
+        log_group,
+      </if>
+      <if test="logLevel != null" >
+        log_level,
+      </if>
+      <if test="createTime != null" >
+        createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorDate != null" >
+        #{operatorDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorModule != null" >
+        #{operatorModule,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorType != null" >
+        #{operatorType,jdbcType=INTEGER},
+      </if>
+      <if test="operatorDesc != null" >
+        #{operatorDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="logGroup != null" >
+        #{logGroup,jdbcType=INTEGER},
+      </if>
+      <if test="logLevel != null" >
+        #{logLevel,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

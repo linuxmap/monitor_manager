@@ -1,0 +1,107 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"	pageEncoding="utf-8"%>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="jhy-page">
+ <tr>
+   <td>
+    <div class="page-turning" style="font-size: 12px;">
+    	<span class="line-l"><em>&nbsp;共&nbsp;<b>${myPage.totalRows}</b>&nbsp;条&nbsp;&nbsp;&nbsp;&nbsp;每页<input type="text" name="rowsId" id="rowsId" class="text" value='${myPage.number}' onKeyDown="if(event.keyCode==13){event.keyCode=null; if(check_validate1(this)){doSearch();}else{return false;} }" onchange="if(check_validate1(this)){doSearch();}else{return false;} ">条</em></span>
+    	<em> <input type="button" value="刷新" class="r1" onClick="doSearch();" > </em>
+    	<c:if test="${myPage.intPage<=1}">
+    		<input type="button" value="首页" class="p2-h"><input type="button" value="上一页" class="p1-h">
+    	</c:if>
+    	<c:if test="${myPage.intPage>1}">
+    		<input type="button" value="首页" class="p2" onClick="setLPage();"><input type="button" value="上一页" class="p1" onClick="setLastPage();">
+    	</c:if>
+    	<span class="line-c"><em>第<input type="text" name="pageId" id="pageId" class="text" value='${myPage.intPage}' onKeyDown="if(event.keyCode==13){event.keyCode=null; if(check_validate1(this)){doSearch();}else{return false;} }" onchange="if(check_validate1(this)){doSearch();}else{return false;} ">页&nbsp;/共&nbsp;${myPage.totalPages}&nbsp;页</em></span>
+    	<c:if test="${myPage.intPage >= myPage.totalPages}">
+    		<input type="button" value="下一页" class="n1-h"><input type="button" value="尾页" class="n2-h">
+    	</c:if>
+    	<c:if test="${myPage.intPage < myPage.totalPages}">
+    		<input type="button" value="下一页" class="n1" onClick="setPrePage();"><input type="button" value="尾页" class="n2" onClick="setPreLPage();">
+    	</c:if>
+    </div>
+   </td>
+  </tr>
+</table>
+<script type="text/javascript"> 
+    /**重置form  */
+    function clearForm(frm){
+  		$(':input','#'+frm)  
+		.not(':button, :submit, :reset, :hidden')  
+		.val('')  
+		.removeAttr('checked')  
+		.removeAttr('selected');  
+	}
+    function check_validate1(rowsCheck){  
+       var value = rowsCheck.value; 
+       var reg = new RegExp("^[0-9]*$");
+       if(!reg.test(value)){
+      	  rowsCheck.value = rowsCheck.defaultValue;  
+      	  return false;   
+       }else{
+       $("input[name='"+ rowsCheck.name +"']").val(value);
+       	  return true;
+       }
+    }
+    //设置行数 页数
+    function setPage(){
+    	//debugger;
+    	//获取当前行数
+    	var rowVal = $("#rowsId").val();
+    	//获取当前页数
+    	var pageVal = parseInt($("#pageId").val());
+    	if(pageVal<=1){
+    		pageVal = 1;
+    	}
+    	if(pageVal>=parseInt("${myPage.totalPages}")&& 0 !=parseInt("${myPage.totalPages}")){
+    		pageVal = "${myPage.totalPages}";
+    	}
+    	//设置行数
+    	$("#rows").val(rowVal);
+    	//设置页数
+    	$("#page").val(pageVal);
+    }
+    //上一页
+    function setLastPage(){
+    	//获取当前页数
+    	var pageVal = $("#pageId").val();
+    	//当前页数加1
+    	pageVal = parseInt(pageVal) - 1;
+    	//设置页数
+    	$("#pageId").val(pageVal);
+    	
+    	doSearch();
+    }
+    //首页
+    function setLPage(){
+    	//获取当前页数
+    	var pageVal = "1";
+    	//当前页数加1
+    	pageVal = parseInt(pageVal) ;
+    	//设置页数
+    	$("#pageId").val(pageVal);
+    	
+    	doSearch();
+    }
+     //下一页
+    function setPrePage(){
+    	//获取当前页数
+    	var pageVal = $("#pageId").val();
+    	//当前页数加1
+    	pageVal = parseInt(pageVal) + 1;
+    	//设置页数
+    	$("#pageId").val(pageVal);
+    	
+    	doSearch();
+    }
+    //尾页
+    function setPreLPage(){
+    	//获取总页数
+    	var pageVal = "${myPage.totalPages}";
+    	//当前页数加1
+    	pageVal = parseInt(pageVal) ;
+    	//设置页数
+    	$("#pageId").val(pageVal);
+    	
+    	doSearch();
+    }
+   </script> 

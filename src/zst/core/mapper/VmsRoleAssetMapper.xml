@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.VmsRoleAssetMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.VmsRoleAsset" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="asset_id" property="assetId" jdbcType="INTEGER" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_id, asset_id, org_id
+  </sql>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id != null ">
+		AND id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="roleId != null ">
+		AND role_id = #{roleId,jdbcType=INTEGER}
+	</if>
+	<if test="assetId != null ">
+		AND asset_id = #{assetId,jdbcType=INTEGER}
+	</if>
+	<if test="orgId != null ">
+		AND org_id = #{orgId,jdbcType=INTEGER}
+	</if>
+  </sql>
+  
+  <!-- 根据角色id批量查找 -->
+  <select id="selectByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_role_asset
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据角色id批量查找 -->
+  <select id="selectByRoleIdList" resultMap="BaseResultMap" parameterType="java.util.List" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_role_asset
+    where role_id
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </select>
+  
+  <!-- 设为不可见时将角色-设备表的关联关系删除  -->
+  <delete id="deleteByOrgList" parameterType="java.util.List" >
+    delete from zst_role_asset
+    where org_id in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </delete>
+  
+  <!-- 根据批量角色id批量删除 -->
+  <delete id="deleteByRoleIdList" parameterType="java.util.List" >
+    delete from zst_role_asset
+    where role_id in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </delete>
+  
+  
+  <!-- 按组织机构id和设备id查询出符合条件的记录 -->
+  <select id="selectCountByMap" resultType="long" parameterType="java.util.Map">
+    SELECT COUNT(1)
+    	from zst_role_asset
+    where
+    	org_id = #{orgId}
+    AND
+    	asset_id in
+	 	<foreach item="ids" index="index" collection="ids" open="(" separator="," close=")">
+			#{ids}
+		</foreach>   	
+  </select>
+  
+  <!-- 根据角色id删除 -->
+  <delete id="deleteByRoleId" parameterType="java.lang.Integer" >
+    delete from zst_role_asset
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 根据对象属性值批量删除记录 -->
+  <delete id="deleteByRoleAsset" parameterType="java.util.List" >
+    delete from zst_role_asset
+    where
+    	<foreach collection="list" item="item" index="index" separator="or">
+    		(
+    			role_id = #{item.roleId,jdbcType=INTEGER}
+    			and
+    			asset_id = #{item.assetId,jdbcType=INTEGER}
+    			and
+    			org_id = #{item.orgId,jdbcType=INTEGER}
+    		)
+    	</foreach>
+  </delete>
+  
+  <!-- 根据角色id和组织机构的id删除关联记录 -->
+  <delete id="deleteByRoleAssetOrg" parameterType="java.util.List" >
+    delete from zst_role_asset
+    where
+    	<foreach collection="list" item="item" index="index" separator="or">
+    		(
+    			role_id = #{item.roleId,jdbcType=INTEGER}
+    			and
+    			org_id = #{item.orgId,jdbcType=INTEGER}
+    		)
+    	</foreach>
+  </delete>
+  
+  <!-- 设置设备可见性时根据组织和设备id删除角色-设备关系 -->
+  <delete id="deleteByOrgAsset" parameterType="java.util.Map" >
+    delete from zst_role_asset
+    where
+    	org_id = #{orgId}
+    AND
+    	asset_id in
+	 	<foreach item="list" index="index" collection="list" open="(" separator="," close=")">
+			#{list}
+		</foreach>
+  </delete>
+  
+   <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.VmsRoleAsset" resultType="long">
+		SELECT COUNT(1) COUN FROM zst_role_asset
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.VmsRoleAsset" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from zst_role_asset
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <!-- 用户的个性化查询  -->
+  <select id="selectListByPersonalizeMap" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" />
+  		from
+  		   (
+			select <include refid="Base_Column_List" />
+			from zst_role_asset where 1=1
+			<if test="roleid != null and roleid.size>0 ">
+				AND role_id in
+				<foreach item="item" index="index" collection="roleid" open="(" separator="," close=")">
+					#{item,jdbcType=INTEGER}
+				</foreach>
+			</if>
+		   ) ra
+			where 1=1
+			<!-- <if test="plusasset != null and plusasset.size>0 ">
+				AND ra.asset_id in
+					<foreach item="item" index="index" collection="plusasset" open="(" separator="," close=")">
+						#{item,jdbcType=INTEGER}
+					</foreach>
+			</if> -->
+			<if test="minusasset != null and minusasset.size>0 ">
+				AND ra.asset_id not in
+					<foreach item="item" index="index" collection="minusasset" open="(" separator="," close=")">
+						#{item,jdbcType=INTEGER}
+					</foreach>
+			</if>
+			<!-- <if test="plusassetorg != null and plusassetorg.size>0 ">
+				AND ra.org_id in
+					<foreach item="item" index="index" collection="plusassetorg" open="(" separator="," close=")">
+						#{item,jdbcType=INTEGER}
+					</foreach>
+			</if> -->
+			<if test="minusassetorg != null and minusassetorg.size>0 ">
+				AND ra.org_id not in
+					<foreach item="item" index="index" collection="minusassetorg" open="(" separator="," close=")">
+						#{item,jdbcType=INTEGER}
+					</foreach>
+			</if>
+  </select>
+  
+  <!-- 批量添加 -->
+  <insert id="insertBatch" parameterType="java.util.List" >
+     insert into zst_role_asset (role_id, asset_id, org_id)
+     values
+    <foreach collection="list" item="item" index="index" separator="," >
+        	(#{item.roleId,jdbcType=INTEGER}, #{item.assetId,jdbcType=INTEGER}, #{item.orgId,jdbcType=INTEGER})
+    </foreach> 
+  </insert>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_role_asset
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zst_role_asset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.VmsRoleAsset" >
+    insert into zst_role_asset (id, role_id, asset_id, org_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{assetId,jdbcType=INTEGER},  #{orgId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.VmsRoleAsset" >
+    insert into zst_role_asset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="assetId != null" >
+        asset_id,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="assetId != null" >
+        #{assetId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.VmsRoleAsset" >
+    update zst_role_asset
+    <set >
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="assetId != null" >
+        asset_id = #{assetId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.VmsRoleAsset" >
+    update zst_role_asset
+    set role_id = #{roleId,jdbcType=INTEGER},
+      asset_id = #{assetId,jdbcType=INTEGER},
+      org_id = #{orgId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

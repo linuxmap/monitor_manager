@@ -1,0 +1,79 @@
+	/* 	#fm{
+			margin-left: 30px;
+		} */
+		label{
+			 font-weight:500; 
+			margin-right:10px ;
+			width: 100px;
+   			text-align: right;
+   			color:#000;
+   			display: inline-block!important;
+		}
+		textarea{
+			resize: none;
+		    padding: 5px;
+		    border-radius: 3px;
+		    width: 200px;
+		    height: 80px;
+			} 
+		input[type='text']{
+			border-radius: 3px;
+		    padding-left: 10px;
+		    height: 28px;
+		    width:200px;
+		    line-height: 28px;
+		}
+		input::-ms-clear{display:none;}
+		td{
+    		padding: 5px 0;
+		}
+		select{
+			line-height: 30px;
+		    height: 28px;
+		    border-radius: 3px;
+		    width: 200px;
+		    padding-left:10px;
+		    line-height: 28px;
+		}
+		.btn-foot{
+		    display: inline-block;
+		    width: 100%;
+		    text-align: center;
+		    margin-top: 16px;
+		}
+		#save{
+			background: #399efc;
+		    border: 0;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #fff;
+		    margin: 0 20px;
+		    height: 30px;
+   			display:inline-block;
+
+		}
+		#cancel{
+			background: #fff;
+		    border: 1px #399efc solid ;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #399efc;
+		    margin: 0 20px;
+		}
+		#close{
+			background: #fff;
+		    border: 1px #399efc solid ;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #399efc;
+		    margin: 0 20px;
+		}
+		.letter-spacing{
+			letter-spacing:8px
+		}
+		table{
+			font-size:12px;
+		}

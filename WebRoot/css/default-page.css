@@ -1,0 +1,39 @@
+@CHARSET "UTF-8";
+
+/****************分页样式 *******************/
+.jhy-page{ background:#fff; font-size:12px; height:32px;}
+.jhy-page .page-turning,.jhy-page .page-turning span,
+.jhy-page .page-turning em{ float:left;font-style:normal}
+.jhy-page .page-turning .text{ width:22px; line-height:18px;height:18px; margin:0 3px; text-align:center;padding-left:0}
+.jhy-page .page-turning .line-l{ border-right: solid 1px #FFF; margin-right:10px;}
+.jhy-page .page-turning .line-l em{  padding:0 10px;font-style:normal}
+.jhy-page .page-turning .line-c{  border-right: solid 1px #FFF; margin-right:10px;}
+.jhy-page .page-turning .line-c em{font-style:normal; border-left: solid 1px #FFF; padding:0 10px;}
+.jhy-page .page-turning .line-r em{ border-left: solid 1px #FFF; padding:0 10px;font-style:normal}
+.jhy-page .page-turning b{ padding:0 10px; color: #00468C;}
+.jhy-page .num{ float:right;}
+.jhy-page .p1,.jhy-page .p1-h,
+.jhy-page .p2,.jhy-page .p2-h,
+.jhy-page .n1,.jhy-page .n1-h,
+.jhy-page .n2,.jhy-page .n2-h,
+.jhy-page .r1{ float:left;  border:none; cursor: pointer; width:52px; height:18px;border:0!important}
+.jhy-page .p1{ background:#fff ;color:#000}
+.jhy-page .p2,.n1,.n2,.r1,.p1-h,.p2-h,.n1-h,.n2-h{ background:#fff;}
+/* .jhy-page .n1{ background:#fff}
+.jhy-page .n2{ background:#fff}
+.jhy-page .r1{ background:#fff}
+.jhy-page .p1-h{ background:#fff }
+.jhy-page .p2-h{ background:#fff}
+.jhy-page .n1-h{ background:#fff}
+.jhy-page .n2-h{ background:#fff} */
+
+/* .jhy-page .r1{ float:left; text-indent:-9999px; border:none; cursor: pointer; width:18px; height:18px; margin:2px 10px 0 0;}
+.jhy-page .p1{ background:url(../img/list/jhy_page_icons.png) -16px 0; }
+.jhy-page .p2{ background:url(../img/list/jhy_page_icons.png);}
+.jhy-page .n1{ background:url(../img/list/jhy_page_icons.png) -32px 0;}
+.jhy-page .n2{ background:url(../img/list/jhy_page_icons.png) -48px 0;}
+.jhy-page .r1{ background:url(../img/list/jhy_page_icons.png) -64px 0;}
+.jhy-page .p1-h{ background:url(../img/list/jhy_page_icons_stop.png) -16px 0; }
+.jhy-page .p2-h{ background:url(../img/list/jhy_page_icons_stop.png);}
+.jhy-page .n1-h{ background:url(../img/list/jhy_page_icons_stop.png) -32px 0;}
+.jhy-page .n2-h{ background:url(../img/list/jhy_page_icons_stop.png) -48px 0;} */

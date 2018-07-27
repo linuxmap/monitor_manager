@@ -1,0 +1,83 @@
+		/* #fm{
+			margin-left: 56px;
+		} */
+  		#meetingRoomDesc{
+			height: 100px;
+		    width: 520px;
+		    float: left;
+		}
+		textarea{
+			resize:none;
+			/* padding:10px; */
+			margin-top: 5px;
+			border-radius: 3px;
+		    float: left;
+   			width: 200px;
+   			margin-left: 10px;
+			} 
+		#miaoshu{
+			display: block;
+		    float: left;
+		    width: 169px;
+		    font-size: 12px;
+		    margin-top: 10px;
+		    text-align:right;
+		}
+		input{
+			border-radius: 3px;
+		    padding-left: 10px;
+		    height: 28px;
+		    width:200px;
+		}
+		td{
+    		padding: 5px;
+    		line-height: 24px;
+    		width:120px;
+		}
+		select{
+			line-height: 30px;
+		    height: 28px;
+		    border-radius: 3px;
+		    width: 200px;
+		    padding-left:5px;
+		}
+		.btn-foot{
+		    display: inline-block;
+		    width: 100%;
+		    text-align: center;
+		    margin-top: 30px;
+		}
+		#save{
+			background: #399efc;
+		    border: 0;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #fff;
+		    margin: 0 20px;
+		}
+		#cancel{
+			background: #fff;
+		    border: 1px #399efc solid ;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #399efc;
+		    margin: 0 20px;
+		}
+		#close{
+			background: #fff;
+		    border: 1px #399efc solid ;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #399efc;
+		    margin: 0 20px;
+		}
+		table{
+			font-size:12px;
+		}
+		td:first-of-type{
+			text-align:right;
+			margin-right:10px;
+		}

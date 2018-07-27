@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.VmsThresholdMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.VmsThreshold" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="deviceProperty_id" property="devicePropertyId" jdbcType="INTEGER" />
+    <result column="expression" property="expression" jdbcType="VARCHAR" />
+    <result column="orderNumber" property="orderNumber" jdbcType="INTEGER" />
+    <result column="alarm_level" property="alarmLevel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, deviceProperty_id, expression, orderNumber, alarm_level
+  </sql>
+  
+  <!-- 用于列表展示 -->
+  <resultMap id="BaseResultMapView" type="zst.core.entity.VmsThreshold" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="deviceProperty_id" property="devicePropertyId" jdbcType="INTEGER" />
+    <result column="expression" property="expression" jdbcType="VARCHAR" />
+    <result column="orderNumber" property="orderNumber" jdbcType="INTEGER" />
+    <result column="alarm_level" property="alarmLevel" jdbcType="INTEGER" />
+    
+    <result column="alarm_level_name" property="alarmLevelName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id != null ">
+		AND id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="name != null and name != '' ">
+		AND name = #{name,jdbcType=VARCHAR}
+	</if>
+	<if test="devicePropertyId != null ">
+		AND deviceProperty_id = #{devicePropertyId,jdbcType=INTEGER}
+	</if>
+	<if test="expression != null and expression != '' ">
+		AND expression = #{expression,jdbcType=VARCHAR}
+	</if>
+	<if test="orderNumber != null ">
+		AND orderNumber = #{orderNumber,jdbcType=INTEGER}
+	</if>
+	<if test="alarmLevel != null ">
+		AND alarm_level = #{alarmLevel,jdbcType=INTEGER}
+	</if>
+  </sql>  
+  
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.VmsThreshold" resultType="long">
+		SELECT COUNT(1) COUN FROM vms_threshold
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.VmsThreshold" resultMap="BaseResultMapView">		
+		select id, vms_threshold.name as name, deviceProperty_id, expression, vms_threshold.orderNumber as orderNumber, alarm_level, vms_alarmlevel.name as alarm_level_name
+			from vms_threshold
+		left join vms_alarmlevel
+		on vms_alarmlevel.level_id = vms_threshold.alarm_level
+		<include refid="Example_Where_Clause" />
+		order by orderNumber
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from vms_threshold
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from vms_threshold
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.VmsThreshold" >
+    insert into vms_threshold (id, name, deviceProperty_id, 
+      expression, orderNumber, alarm_level
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{devicePropertyId,jdbcType=INTEGER}, 
+      #{expression,jdbcType=VARCHAR}, #{orderNumber,jdbcType=INTEGER}, #{alarmLevel,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.VmsThreshold" >
+    insert into vms_threshold
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="devicePropertyId != null" >
+        deviceProperty_id,
+      </if>
+      <if test="expression != null" >
+        expression,
+      </if>
+      <if test="orderNumber != null" >
+        orderNumber,
+      </if>
+      <if test="alarmLevel != null" >
+        alarm_level,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="devicePropertyId != null" >
+        #{devicePropertyId,jdbcType=INTEGER},
+      </if>
+      <if test="expression != null" >
+        #{expression,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=INTEGER},
+      </if>
+      <if test="alarmLevel != null" >
+        #{alarmLevel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.VmsThreshold" >
+    update vms_threshold
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="devicePropertyId != null" >
+        deviceProperty_id = #{devicePropertyId,jdbcType=INTEGER},
+      </if>
+      <if test="expression != null" >
+        expression = #{expression,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        orderNumber = #{orderNumber,jdbcType=INTEGER},
+      </if>
+      <if test="alarmLevel != null" >
+        alarm_level = #{alarmLevel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.VmsThreshold" >
+    update vms_threshold
+    set name = #{name,jdbcType=VARCHAR},
+      deviceProperty_id = #{devicePropertyId,jdbcType=INTEGER},
+      expression = #{expression,jdbcType=VARCHAR},
+      orderNumber = #{orderNumber,jdbcType=INTEGER},
+      alarm_level = #{alarmLevel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

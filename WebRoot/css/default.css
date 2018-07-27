@@ -1,0 +1,256 @@
+@CHARSET "UTF-8"; 
+/****************基本样式 文件*****************/
+
+/*重置所有样式*/
+body,div,dl,dt,dd,ul,ol,li,h1,h3,h2,h4,h5,h6,pre,th,p,blockquote,
+code,form,fieldset,legend,input,button,textarea,
+td {
+	margin: 0;
+	padding: 0;
+}
+input,select{vertical-align:middle;}
+/*基本body样式1*/
+.default-one-body {
+	background: #fff;
+	/* margin: 10px 10px 10px 0px; */
+	font-size: 12px;
+}
+label{
+	font-weight:500;
+	font-size:12px;
+	color:#000!important;
+}
+/*基本btn样式1*/
+.default-one-btn {
+	padding: 6px 16px;
+	background: #3997f4;
+	color: #fff;
+	border: 0;
+	border-radius: 3px;
+	margin-left:5px;
+	font-size: 12px!important;
+}
+/*=========top重置按钮统一样式==============*/
+.default-one-btn-top{
+	/* margin: 0; */
+    margin-right: 6px;
+    padding: 5px 15px;
+    color: #3997f4;
+    border-radius: 3px;
+    background:#fff;
+    font-size: 12px!important;
+    border: 1px solid #3997f4;
+}
+.default-one-btn:hover {
+	background: #0081ed;
+	color: #fff;
+	font-size: 12px!important;
+}
+/*查询按钮颜色样式 top */
+.btn-green{
+	background: #02d101 !important;
+}
+.btn-green:hover{
+	background: #16be00 !important;
+}
+/*基本input样式1*/
+.default-one-input {
+	width:120px;
+	height:24px;
+	font-size:12px;
+	border-radius: 3px;
+	padding-left: 5px;
+	border: 1px solid #a2a7a6;
+	line-height:24px;
+}
+/* ===========input样式效果============ */
+input[type=text],textarea,select,input{
+	-webkit-transition: all 0.30s ease-in-out;
+	-moz-transition: all 0.30s ease-in-out;
+	-ms-transition: all 0.30s ease-in-out;
+	-o-transition: all 0.30s ease-in-out;
+	outline: none;
+	border: 1px solid #a2a7a6!important;
+	font-size:12px;
+	padding-left: 10px;
+} 
+input[type=text]:focus, textarea:focus ,select:focus,input:focus{
+	border: 1px solid rgba(77, 144, 254, 1)!important;
+}
+/*基本label样式1*/
+.default-one-lable {
+	font-size: 12px;
+	font-weight: 500;
+	margin:0 3px;
+	line-height: 24px;
+}
+/*  确认/取消样式整理  */
+.save{
+	background: #3997f4;
+    border: 0;
+    border-radius: 3px;
+   /*  line-height: 40px; */
+    padding: 6px 20px;
+    color: #fff;
+    margin: 0 20px;
+}
+.save:hover{
+	background: #0081ed;
+}
+.cancel{
+	background: #fff;
+    border: 1px #399ef4 solid ;
+    border-radius: 3px;
+    /* line-height: 40px; */
+    padding: 6px 20px;
+    color: #3997f4;
+    margin: 0 20px;
+}
+/*a标签样式*/
+a:visited,a:link,a:hover,a:active,a{
+	cursor:pointer;
+	text-decoration: none;
+	/* font-size: 12px; */
+	color:#0081ed;
+}
+/*******装饰条*****  */
+.span-list{
+	line-height: 22px;
+    display: inline-block;
+    border-left: 4px #3997f4 solid;
+    margin: 9px 0;
+    padding-left: 8px;
+}
+.font-color{margin-top: 5px;}
+/*****tab表格样式 *******/
+.tabcenter{
+	/* background: #fff;
+    display: table;
+    width: 100%; */
+    padding:0 6px!important;
+}
+.table-top {
+    height: 44px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    background: #f2f2f2;
+    padding: 0;
+    padding-top: 10px;
+}
+.tab-p{
+	float:left
+}
+.min-select{
+	width:46px;
+	height:24px;
+	border-radius: 3px;
+	border: 1px solid #ccc;
+}
+.table>tbody>tr:nth-child(odd)
+{
+	background:#fff;
+}
+.table>tbody>tr:nth-child(even)
+{
+	background:#f3f3f3;
+}
+/* .table td:nth-of-type(3){color:#0081ed} */
+.table>thead>tr>th{background:#3997f4;color:#fff;border-bottom:0;}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+	text-align: center !important;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+   /*  padding: 8px 3px; */
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+    font-size: 12px;
+}
+.table-hover > tbody > tr:hover > td,
+.table-hover > tbody > tr:hover > th {
+  background-color: #d2e9ff;
+}
+/*****layui--tab选项卡设置 *******/
+.layui-tab-card>.layui-tab-title .layui-this {
+    background-color: #fff;
+    border-top: 3px solid #3997f4;
+    color:#555;
+    font-weight:bolder;
+}
+.layui-tab-title li {
+    line-height: 38px;
+}
+.layui-tab-title .layui-this:after {
+    height: 38px;
+}
+/*=====================融合分界线=========================  */
+.btn-primary,.btn-primary:hover,.btn-primary:active,.btn-primary:visited,.btn-primary:link{
+		background:#3a9efc;
+		border:0;
+		color:#fff;
+		font-size: 12px!important;
+}
+.starred{
+	color:red;
+}
+.btn-info {
+    color: #fff!important;
+    background-color: #3997f4;
+    border-color: #3997f4;
+    font-size: 12px!important;
+}
+.btn-info:hover {
+    color: #fff;
+    background-color: #0081ed;
+    border-color: #0081ed;
+}
+.laydate_body .laydate_y input {
+    width: 64px;
+    margin-right: 15px;
+     border: none;
+}
+.laydate_body .laydate_ym input {
+    float: left;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border: none!important;
+    cursor: pointer;
+}
+/* ==========左侧树形滚动条设置============== */
+.scroll-tree{
+	height: 100%;
+    overflow: auto;
+}
+/*----------------------滚动条设置-----------------------------------------------------*/
+::-webkit-scrollbar {
+	width: 3px;
+	 height: 3px; 
+	background-color: transparent;
+}
+/*定义滚动条的轨道，内阴影及圆角*/
+::-webkit-scrollbar-track {
+	/* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3); */
+	/* border-radius: 10px; */
+	background-color: transparent;
+}
+/*定义滑块，内阴影及圆角*/
+::-webkit-scrollbar-thumb {
+	/*width: 10px;*/
+	/* height: 20px; */
+	border-radius: 3px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+	background-color: #cdcdcd;
+}
+
+.padding-right-r{
+	padding-right:0px !important;
+}
+
+.line-height{
+	line-height: 34px;
+}
+.padding-right{
+	padding-right:0 !important;
+}

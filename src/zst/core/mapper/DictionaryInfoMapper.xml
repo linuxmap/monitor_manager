@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.DictionaryInfoMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.DictionaryInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dictionary_id" property="dictionaryId" jdbcType="VARCHAR" />
+    <result column="dictionary_name" property="dictionaryName" jdbcType="VARCHAR" />
+    <result column="dictionary_status" property="dictionaryStatus" jdbcType="INTEGER" />
+    <result column="dictionary_desc" property="dictionaryDesc" jdbcType="VARCHAR" />
+    <result column="dictionary_level" property="dictionaryLevel" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+	where dictionary_level=1 AND dictionary_status=1
+	<if test="id != null ">
+		AND id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="dictionaryId != null and dictionaryId!=''">
+		AND dictionary_id = #{dictionaryId,jdbcType=VARCHAR}
+	</if>
+	<if test="dictionaryName != null and dictionaryName !=''">
+		AND dictionary_name = #{dictionaryName,jdbcType=VARCHAR}
+	</if>
+	<if test="dictionaryStatus != null and dictionaryStatus !=''">
+		AND dictionary_status = #{dictionaryStatus,jdbcType=INTEGER}
+	</if>
+	<if test="dictionaryDesc != null and dictionaryDesc !=''">
+		AND dictionary_desc = #{dictionaryDesc,jdbcType=VARCHAR}
+	</if>
+	<if test="dictionaryLevel != null and dictionaryLevel !=''">
+		AND dictionary_level = #{dictionaryLevel,jdbcType=INTEGER}
+	</if>
+	<if test="createUserId != null ">
+		AND create_user_id = #{createUserId,jdbcType=INTEGER}
+	</if>
+	<if test="createTime != null and createTime !=''">
+		AND create_time = #{createTime,jdbcType=TIMESTAMP}
+	</if>
+	<if test="updateTime != null and updateTime !=''">
+		AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+	</if>
+  </sql>
+  <sql id="Base_Column_List" >
+    id,dictionary_id, dictionary_name, dictionary_status, dictionary_desc, dictionary_level, create_user_id, create_time,update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_dictionary_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.DictionaryInfo" resultType="long">
+		SELECT COUNT(1) COUN FROM zst_dictionary_info
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.DictionaryInfo" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from zst_dictionary_info
+		<include refid="Example_Where_Clause" />
+			order by create_time DESC
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  <!-- 查询所有 -->
+  <select id="selectAllByObj" parameterType="dictionaryInfo" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+			from zst_dictionary_info
+		<include refid="Example_Where_Clause" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zst_dictionary_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="zst.core.entity.DictionaryInfo" >
+    insert into zst_dictionary_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dictionaryId != null" >
+        dictionary_id,
+      </if>
+      <if test="dictionaryName != null" >
+        dictionary_name,
+      </if>
+      <if test="dictionaryStatus != null" >
+        dictionary_status,
+      </if>
+      <if test="dictionaryDesc != null" >
+        dictionary_desc,
+      </if>
+      <if test="dictionaryLevel != null" >
+        dictionary_level,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="dictionaryId != null" >
+        #{dictionaryId,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryName != null" >
+        #{dictionaryName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryStatus != null" >
+        #{dictionaryStatus,jdbcType=INTEGER},
+      </if>
+      <if test="dictionaryDesc != null" >
+        #{dictionaryDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryLevel != null" >
+        #{dictionaryLevel,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 批量更新 -->
+  <update id="updateBatchByDictionaryIds" parameterType="java.util.List">
+	update zst_dictionary_info SET org_status = '0'  WHERE org_id in 
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.DictionaryInfo" >
+    update zst_dictionary_info
+    <set >
+      <if test="dictionaryId != null" >
+        dictionary_id = #{dictionaryId,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryName != null" >
+        dictionary_name = #{dictionaryName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryStatus != null" >
+        dictionary_status = #{dictionaryStatus,jdbcType=INTEGER},
+      </if>
+      <if test="dictionaryDesc != null" >
+        dictionary_desc = #{dictionaryDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="dictionaryLevel != null" >
+        dictionary_level = #{dictionaryLevel,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

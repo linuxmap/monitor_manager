@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.SysUserAssetMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.SysUserAsset" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="asset_id" property="assetId" jdbcType="INTEGER" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="flag" property="flag" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, asset_id, org_id, flag
+  </sql>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id != null ">
+		AND id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="userId != null ">
+		AND user_id = #{userId,jdbcType=INTEGER}
+	</if>
+	<if test="assetId != null ">
+		AND asset_id = #{assetId,jdbcType=INTEGER}
+	</if>
+	<if test="orgId != null ">
+		AND org_id = #{orgId,jdbcType=INTEGER}
+	</if>
+	<if test="flag != null ">
+		AND flag = #{flag,jdbcType=BIT}
+	</if>
+  </sql>
+  
+  <!-- 批量添加 -->
+  <insert id="insertBatch" parameterType="java.util.List" >
+     insert into zst_user_asset (user_id, asset_id, org_id, flag)
+     values
+    <foreach collection="list" item="item" index="index" separator="," >
+        	(
+        	#{item.userId,jdbcType=INTEGER}, #{item.assetId,jdbcType=INTEGER},
+        	#{item.orgId,jdbcType=INTEGER}, #{item.flag,jdbcType=BIT}
+        	)
+    </foreach> 
+  </insert>
+  
+  <!-- 按组织机构id和设备id查询出符合条件的记录 -->
+  <select id="selectCountByMap" resultType="long" parameterType="java.util.Map">
+    SELECT COUNT(1)
+    	from zst_user_asset
+    where
+    	org_id = #{orgId}
+    AND
+    	asset_id in
+	 	<foreach item="ids" index="index" collection="ids" open="(" separator="," close=")">
+			#{ids}
+		</foreach>   	
+  </select>
+  
+  <!--根据用户id删除关联信息 -->
+  <delete id="deleteByUserId" parameterType="java.lang.Integer" >
+    delete from zst_user_asset
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 设置设备可见性时根据组织和设备id删除用户-设备关系 -->
+  <delete id="deleteByOrgAsset" parameterType="java.util.Map" >
+    delete from zst_user_asset
+    where
+    	org_id = #{orgId}
+    AND
+    	asset_id in
+	 	<foreach item="list" index="index" collection="list" open="(" separator="," close=")">
+			#{list}
+		</foreach>
+  </delete>
+  
+  <!-- 设为组织不可见时将用户-设备表的关联关系删除  -->
+  <delete id="deleteByOrgList" parameterType="java.util.List" >
+    delete from zst_user_asset
+    where org_id in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </delete>
+  
+  <!-- 根据用户id集合删除关联信息  -->
+  <delete id="deleteByUserIdList" parameterType="java.util.List" >
+    delete from zst_user_asset
+    where user_id in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </delete>
+  
+  <!-- 批量删除 -->
+  <insert id="deleteBatch" parameterType="java.util.List" >
+    <foreach collection="list" item="item" index="index" separator=";" >
+    	delete from zst_user_asset
+    	where
+    		user_id = #{item.userId,jdbcType=INTEGER}
+    		AND
+    		asset_id = #{item.assetId,jdbcType=INTEGER}
+    		AND
+    		org_id = #{item.orgId,jdbcType=INTEGER}
+    		AND
+    		flag = 1
+    </foreach> 
+  </insert>
+  
+   <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.SysUserAsset" resultType="long">
+		SELECT COUNT(1) COUN FROM zst_user_asset
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.SysUserAsset" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from zst_user_asset
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <!-- 根据用户id查询 -->
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_user_asset
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_user_asset
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zst_user_asset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.SysUserAsset" >
+    insert into zst_user_asset (id, user_id, asset_id, 
+      org_id, flag)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{assetId,jdbcType=INTEGER}, 
+      #{orgId,jdbcType=INTEGER}, #{flag,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.SysUserAsset" >
+    insert into zst_user_asset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="assetId != null" >
+        asset_id,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="assetId != null" >
+        #{assetId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.SysUserAsset" >
+    update zst_user_asset
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="assetId != null" >
+        asset_id = #{assetId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.SysUserAsset" >
+    update zst_user_asset
+    set user_id = #{userId,jdbcType=INTEGER},
+      asset_id = #{assetId,jdbcType=INTEGER},
+      org_id = #{orgId,jdbcType=INTEGER},
+      flag = #{flag,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

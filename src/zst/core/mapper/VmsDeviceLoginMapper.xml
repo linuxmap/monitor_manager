@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.VmsDeviceLoginMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.VmsDeviceLogin" >
+    <id column="deviceLogin_id" property="deviceloginId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="port" property="port" jdbcType="INTEGER" />
+    <result column="dataPort" property="dataport" jdbcType="INTEGER" />
+    <result column="loginUser" property="loginuser" jdbcType="VARCHAR" />
+    <result column="loginPwd" property="loginpwd" jdbcType="VARCHAR" />
+    <result column="channelCount" property="channelcount" jdbcType="INTEGER" />
+    <result column="connectType" property="connecttype" jdbcType="INTEGER" />
+    <result column="connectValue" property="connectvalue" jdbcType="VARCHAR" />
+    <result column="device_name_display" property="deviceNameDisplay" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    deviceLogin_id, type, ip, port, dataPort, loginUser, loginPwd, channelCount, connectType, connectValue ,name as device_name_display
+  </sql>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="deviceloginId != null ">
+		AND deviceLogin_id = #{deviceloginId,jdbcType=INTEGER}
+	</if>
+	<if test="type != null ">
+		AND type = #{type,jdbcType=INTEGER}
+	</if>
+	<if test="ip != null ">
+		AND ip = #{ip,jdbcType=VARCHAR}
+	</if>
+	<if test="port != null ">
+		AND port = #{port,jdbcType=INTEGER}
+	</if>
+	<if test="dataport != null ">
+		AND dataPort = #{dataport,jdbcType=INTEGER}
+	</if>
+	<if test="loginuser != null ">
+		AND loginUser = #{loginuser,jdbcType=VARCHAR}
+	</if>
+	<if test="loginpwd != null ">
+		AND loginPwd = #{loginpwd,jdbcType=VARCHAR}
+	</if>
+	<if test="channelcount != null ">
+		AND channelCount = #{channelcount,jdbcType=INTEGER}
+	</if>
+	<if test="connecttype != null ">
+		AND connectType = #{connecttype,jdbcType=INTEGER}
+	</if>
+	<if test="connectvalue != null ">
+		AND connectValue = #{connectvalue,jdbcType=VARCHAR}
+	</if>
+  </sql>
+  
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.VmsDeviceLogin" resultType="long">
+		SELECT COUNT(1) COUN FROM vms_devicelogin
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.VmsDeviceLogin" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from vms_devicelogin
+			left join vms_asset on vms_asset.asset_id = vms_devicelogin.deviceLogin_id
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from vms_devicelogin
+    left join vms_asset on vms_asset.asset_id = vms_devicelogin.deviceLogin_id
+    where deviceLogin_id = #{deviceloginId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from vms_devicelogin
+    where deviceLogin_id = #{deviceloginId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.VmsDeviceLogin" >
+    insert into vms_devicelogin (deviceLogin_id, type, ip, 
+      port, dataPort, loginUser, 
+      loginPwd, channelCount, connectType, 
+      connectValue)
+    values (#{deviceloginId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, 
+      #{port,jdbcType=INTEGER}, #{dataport,jdbcType=INTEGER}, #{loginuser,jdbcType=VARCHAR}, 
+      #{loginpwd,jdbcType=VARCHAR}, #{channelcount,jdbcType=INTEGER}, #{connecttype,jdbcType=INTEGER}, 
+      #{connectvalue,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.VmsDeviceLogin" >
+    insert into vms_devicelogin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="deviceloginId != null" >
+        deviceLogin_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="port != null" >
+        port,
+      </if>
+      <if test="dataport != null" >
+        dataPort,
+      </if>
+      <if test="loginuser != null" >
+        loginUser,
+      </if>
+      <if test="loginpwd != null" >
+        loginPwd,
+      </if>
+      <if test="channelcount != null" >
+        channelCount,
+      </if>
+      <if test="connecttype != null" >
+        connectType,
+      </if>
+      <if test="connectvalue != null" >
+        connectValue,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="deviceloginId != null" >
+        #{deviceloginId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        #{port,jdbcType=INTEGER},
+      </if>
+      <if test="dataport != null" >
+        #{dataport,jdbcType=INTEGER},
+      </if>
+      <if test="loginuser != null" >
+        #{loginuser,jdbcType=VARCHAR},
+      </if>
+      <if test="loginpwd != null" >
+        #{loginpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="channelcount != null" >
+        #{channelcount,jdbcType=INTEGER},
+      </if>
+      <if test="connecttype != null" >
+        #{connecttype,jdbcType=INTEGER},
+      </if>
+      <if test="connectvalue != null" >
+        #{connectvalue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.VmsDeviceLogin" >
+    update vms_devicelogin
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="port != null" >
+        port = #{port,jdbcType=INTEGER},
+      </if>
+      <if test="dataport != null" >
+        dataPort = #{dataport,jdbcType=INTEGER},
+      </if>
+      <if test="loginuser != null" >
+        loginUser = #{loginuser,jdbcType=VARCHAR},
+      </if>
+      <if test="loginpwd != null" >
+        loginPwd = #{loginpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="channelcount != null" >
+        channelCount = #{channelcount,jdbcType=INTEGER},
+      </if>
+      <if test="connecttype != null" >
+        connectType = #{connecttype,jdbcType=INTEGER},
+      </if>
+      <if test="connectvalue != null" >
+        connectValue = #{connectvalue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where deviceLogin_id = #{deviceloginId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.VmsDeviceLogin" >
+    update vms_devicelogin
+    set type = #{type,jdbcType=INTEGER},
+      ip = #{ip,jdbcType=VARCHAR},
+      port = #{port,jdbcType=INTEGER},
+      dataPort = #{dataport,jdbcType=INTEGER},
+      loginUser = #{loginuser,jdbcType=VARCHAR},
+      loginPwd = #{loginpwd,jdbcType=VARCHAR},
+      channelCount = #{channelcount,jdbcType=INTEGER},
+      connectType = #{connecttype,jdbcType=INTEGER},
+      connectValue = #{connectvalue,jdbcType=VARCHAR}
+    where deviceLogin_id = #{deviceloginId,jdbcType=INTEGER}
+  </update>
+</mapper>

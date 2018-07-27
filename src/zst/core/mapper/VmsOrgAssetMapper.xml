@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.VmsOrgAssetMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.VmsOrgAsset" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="asset_id" property="assetId" jdbcType="INTEGER" />
+    <result column="orderNumber" property="ordernumber" jdbcType="INTEGER" />
+    <result column="visibleFlag" property="visibleflag" jdbcType="BIT" />
+    <result column="sourceFlag" property="sourceflag" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, org_id, asset_id, orderNumber, visibleFlag ,sourceFlag
+  </sql>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id != null ">
+		AND id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="orgId != null ">
+		AND org_id = #{orgId,jdbcType=INTEGER}
+	</if>
+	<if test="ordernumber != null ">
+		AND orderNumber = #{ordernumber,jdbcType=INTEGER}
+	</if>
+	<if test="visibleflag != null ">
+		AND visibleFlag = #{visibleflag,jdbcType=BIT}
+	</if>
+	<if test="sourceflag != null ">
+		AND sourceFlag = #{sourceflag,jdbcType=INTEGER}
+	</if>
+  </sql>
+  
+    <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.VmsOrgAsset" resultType="long">
+		SELECT COUNT(1) COUN FROM vms_org_asset
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.VmsOrgAsset" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from vms_org_asset
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+   <!-- 根据组织id批量查找个数 -->
+  <select id="selectCountByOrg" parameterType="java.util.List" resultType="long">
+    SELECT COUNT(1) COUN FROM vms_org_asset
+    where org_id in
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </select>
+  
+    <!-- 根据组织id批量查找 -->
+  <select id="selectByOrgIdList" resultMap="BaseResultMap" parameterType="java.util.List" >
+    select 
+    <include refid="Base_Column_List" />
+    from vms_org_asset
+    where org_id in
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </select>
+  
+  <!-- 批量添加 -->
+  <insert id="insertBatch" parameterType="java.util.List" >
+     insert into vms_org_asset ( org_id, asset_id, orderNumber, visibleFlag, sourceFlag)
+     values
+    <foreach collection="list" item="item" index="index" separator="," >
+        	(#{item.orgId,jdbcType=INTEGER}, #{item.assetId,jdbcType=INTEGER}, #{item.ordernumber,jdbcType=INTEGER}, #{item.visibleflag,jdbcType=BIT}, #{item.sourceflag,jdbcType=INTEGER})
+    </foreach> 
+  </insert>
+  
+  <!-- 根据组织机构id批量设置可见性 -->
+  <update id="updateOrgAssetVisible" parameterType="java.util.Map">
+	update vms_org_asset SET visibleFlag = #{visibleflag}
+	 WHERE org_id in 
+	<foreach item="ids" index="index" collection="ids" open="(" separator="," close=")">
+		#{ids}
+	</foreach>
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from vms_org_asset
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from vms_org_asset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 根据org_id asset_id批量删除表中记录 -->
+  <delete id="deleteByOrgAssetField" parameterType="java.util.List" >
+	    delete from
+	    	vms_org_asset
+	    where
+	  	<foreach collection="list" item="item" index="index" separator="or" >
+	  		(
+		    	org_id = #{item.orgId,jdbcType=INTEGER}
+		    and
+		    	asset_id = #{item.assetId,jdbcType=INTEGER}
+	    	)
+    	</foreach>
+  </delete>
+  
+    <!-- 根据org_id asset_id批量删除表中记录 -->
+  <delete id="deleteByOrgAssetAllField" parameterType="java.util.List" >
+	    delete from
+	    	vms_org_asset
+	    where
+	  	<foreach collection="list" item="item" index="index" separator="or" >
+	  		(
+		    	org_id = #{item.orgId,jdbcType=INTEGER}
+		    and
+		    	asset_id = #{item.assetId,jdbcType=INTEGER}
+		    and
+		    	sourceFlag = #{item.sourceflag,jdbcType=INTEGER}
+	    	)
+    	</foreach>
+  </delete>
+  
+  <!-- 在关联表中设置可见性 -->
+  <update id="updateBatchOrgAssetVisible" parameterType="java.util.Map">
+	update
+		vms_org_asset
+		SET
+		visibleFlag = #{visibleflag}
+	where
+	<foreach item="item" index="index" collection="item" open="(" separator="or" close=")">
+			(
+		    	org_id = #{item.orgId,jdbcType=INTEGER}
+		    and
+		    	asset_id = #{item.assetId,jdbcType=INTEGER}
+	    	)
+	</foreach>
+  </update>
+  
+  <insert id="insert" parameterType="zst.core.entity.VmsOrgAsset" >
+    insert into vms_org_asset (id, org_id, asset_id, 
+      orderNumber, visibleFlag ,sourceFlag)
+    values (#{id,jdbcType=INTEGER}, #{orgId,jdbcType=INTEGER}, #{assetId,jdbcType=INTEGER}, 
+      #{ordernumber,jdbcType=INTEGER}, #{visibleflag,jdbcType=BIT} , #{sourceflag,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.VmsOrgAsset" >
+    insert into vms_org_asset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="assetId != null" >
+        asset_id,
+      </if>
+      <if test="ordernumber != null" >
+        orderNumber,
+      </if>
+      <if test="visibleflag != null" >
+        visibleFlag,
+      </if>
+      <if test="sourceflag != null" >
+        sourceFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="assetId != null" >
+        #{assetId,jdbcType=INTEGER},
+      </if>
+      <if test="ordernumber != null" >
+        #{ordernumber,jdbcType=INTEGER},
+      </if>
+      <if test="visibleflag != null" >
+        #{visibleflag,jdbcType=BIT},
+      </if>
+      <if test="sourceflag != null" >
+        #{sourceflag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.VmsOrgAsset" >
+    update vms_org_asset
+    <set >
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="assetId != null" >
+        asset_id = #{assetId,jdbcType=INTEGER},
+      </if>
+      <if test="ordernumber != null" >
+        orderNumber = #{ordernumber,jdbcType=INTEGER},
+      </if>
+      <if test="visibleflag != null" >
+        visibleFlag = #{visibleflag,jdbcType=BIT},
+      </if>
+      <if test="sourceflag != null" >
+        sourceFlag = #{sourceflag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.VmsOrgAsset" >
+    update vms_org_asset
+    set org_id = #{orgId,jdbcType=INTEGER},
+      asset_id = #{assetId,jdbcType=INTEGER},
+      orderNumber = #{ordernumber,jdbcType=INTEGER},
+      visibleFlag = #{visibleflag,jdbcType=BIT},
+      sourceFlag = #{sourceflag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

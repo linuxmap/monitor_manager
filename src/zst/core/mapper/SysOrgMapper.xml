@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.SysOrgMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.SysOrg" >
+    <id column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="name" property="orgName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="org_level" property="orgLevel" jdbcType="INTEGER" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+    <result column="deleteFlag" property="status" jdbcType="INTEGER" />
+    <result column="code" property="orgCode" jdbcType="VARCHAR" />
+    <result column="have_device" property="haveDevice" jdbcType="INTEGER" />
+    <result column="have_child" property="haveChild" jdbcType="INTEGER" />
+    <result column="visibleFlag" property="isVisible" jdbcType="BIT" />
+    <result column="zoom" property="zoom" jdbcType="INTEGER" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="org_type" property="type" jdbcType="INTEGER" />
+    <result column="org_source" property="orgSource" jdbcType="INTEGER" />
+    <result column="encoding" property="encoding" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="orgId != null and orgId !=''">
+		AND org_id = #{orgId,jdbcType=VARCHAR}
+	</if>
+	<if test="orgName != null and orgName !=''">
+		AND name = #{orgName,jdbcType=VARCHAR}
+	</if>
+	<if test="parentId != null and parentId !=''">
+		AND parent_id = #{parentId,jdbcType=INTEGER}
+	</if>
+	<if test="status != null ">
+		AND deleteFlag = #{status,jdbcType=TINYINT}
+	</if>
+	<if test="isVisible != null ">
+		AND visibleFlag = #{isVisible,jdbcType=BOOLEAN}
+	</if>
+	<if test="orgSource != null ">
+		AND org_source = #{orgSource,jdbcType=TINYINT}
+	</if>
+	<if test="encoding != null and encoding !='' ">
+		AND encoding = #{encoding,jdbcType=VARCHAR}
+	</if>
+	<!-- 模糊查询 -->
+     <if test="keywords != null and keywords != ''"><!-- 关键词检索 -->
+	   and (
+	   		 name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	   	   or pinyin LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	   	   )
+     </if>
+  </sql>
+  <sql id="Base_Column_List" >
+    org_id, name, parent_id, org_level, order_num, description, create_time, update_time, creator_id, deleteFlag,  
+    code, have_device, have_child, visibleFlag, zoom, longitude, latitude, org_type ,org_source ,encoding ,pinyin
+  </sql>
+  
+    <!-- 批量添加 -->
+  <insert id="insertBatch" parameterType="java.util.List" >
+     insert into
+     	zst_organization
+     	( org_id, name, parent_id, org_level, order_num, description, create_time, update_time, creator_id, deleteFlag,  
+    	  code, have_device, have_child, visibleFlag, zoom, longitude, latitude, org_type ,org_source ,encoding ,pinyin
+    	)
+     values
+    <foreach collection="list" item="item" index="index" separator="," >
+    	(
+          #{item.orgId,jdbcType=INTEGER}, #{item.orgName,jdbcType=VARCHAR}, #{item.parentId,jdbcType=INTEGER}, 
+	      #{item.orgLevel,jdbcType=INTEGER}, #{item.orderNum,jdbcType=INTEGER}, #{item.description,jdbcType=VARCHAR},
+	      #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.creatorId,jdbcType=INTEGER},
+	      #{item.status,jdbcType=TINYINT}, #{item.orgCode,jdbcType=VARCHAR}, #{item.haveDevice,jdbcType=INTEGER},
+	      #{item.haveChild,jdbcType=INTEGER},#{item.isVisible,jdbcType=BIT},#{item.zoom,jdbcType=INTEGER},
+	      #{item.longitude,jdbcType=DOUBLE},#{item.latitude,jdbcType=DOUBLE},#{item.type,jdbcType=INTEGER},
+	      #{item.orgSource,jdbcType=INTEGER}, #{item.encoding,jdbcType=VARCHAR} , #{item.pinyin,jdbcType=VARCHAR}
+	    )
+    </foreach> 
+  </insert>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_organization
+    where org_id = #{orgId,jdbcType=INTEGER}
+  </select>
+  <!--查询组织机构总和  -->
+  <select id="selectCountByObj" parameterType="sysOrg" resultType="long">
+		SELECT COUNT(1) COUN FROM zst_organization
+		<include refid="Example_Where_Clause" />
+  </select>
+  
+  <!--查询子节点的个数  -->
+  <select id="selectChildCount" parameterType="java.util.List" resultType="long">
+		SELECT COUNT(1) COUN FROM zst_organization
+		where
+		deleteFlag = 0
+		and parent_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		 	#{item,jdbcType=INTEGER}
+		</foreach>
+  </select>
+  
+  <!-- 批量查询组织传入list  -->
+  <select id="selectListOrgByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+  		select
+		<include refid="Base_Column_List" />
+		from zst_organization
+		where org_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		 	#{item,jdbcType=INTEGER}
+		</foreach>
+  </select>
+  
+  <!-- 批量设置组织的haveChild为1 -->
+  <delete id="updateHaveDeviceByList" parameterType="java.util.List" >
+    update zst_organization set have_device = 1
+		where org_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		 	#{item,jdbcType=INTEGER}
+		</foreach>
+  </delete>
+  
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="sysOrg" resultMap="BaseResultMap">		
+		select 
+		<include refid="Base_Column_List" />
+		from zst_organization
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart>-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+
+  <!-- 根据orgId查找组织机构 -->
+  <select id="selectOrgId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  		SELECT 
+  		<include refid="Base_Column_List" />
+		FROM zst_organization o 
+		WHERE o.org_id = #{orgId}
+  </select>
+  <!--查询组织机构树  -->
+  <select id="selectListOrgTree" parameterType="sysOrg" resultMap="BaseResultMap">
+  		select
+		<include refid="Base_Column_List" />
+		from zst_organization
+		<include refid="Example_Where_Clause" />
+		ORDER BY org_level,order_num 
+  </select>
+  
+  
+   <!--查询组织机构树 权限范围模块  -->
+  <select id="selectListOrgTreeOrderId" parameterType="sysOrg" resultMap="BaseResultMap">
+  		select
+		<include refid="Base_Column_List" />
+		from zst_organization
+	where 1=1
+	<if test="status != null ">
+		AND deleteFlag = #{status,jdbcType=TINYINT}
+	</if>
+	<if test="parentId != null ">
+		AND parent_id = #{parentId,jdbcType=INTEGER}
+	</if>
+	<if test="isVisible != null ">
+		AND visibleFlag = #{isVisible,jdbcType=BOOLEAN}
+	</if>
+	AND org_source <![CDATA[ <> ]]> 6
+	<if test="encoding != null and encoding !='' ">
+		AND encoding = #{encoding,jdbcType=VARCHAR}
+	</if>
+	<!-- 模糊查询 -->
+     <if test="keywords != null and keywords != ''"><!-- 关键词检索 -->
+	   and
+	   	  ( 
+	   		name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	   	   or pinyin LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	   	  )
+     </if>
+		ORDER BY org_id
+  </select>
+  
+  <!--根据节点id查询父节点  -->
+  <select id="selectParOrgByObj" parameterType="sysOrg" resultMap="BaseResultMap">
+  		SELECT 
+  		<include refid="Base_Column_List" />
+		FROM zst_organization o 
+		WHERE o.org_id in(SELECT parent_id FROM zst_organization WHERE org_id = #{orgId})
+  </select>
+  
+  <!-- 根据父节点查出所有的子节点 -->
+  <select id="selectChildsByParId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  		SELECT 
+  		<include refid="Base_Column_List" />
+		FROM zst_organization o 
+		WHERE o.parent_id = #{parentId,jdbcType=INTEGER}
+			and o.deleteFlag = b'0'
+  </select>
+  
+  
+  <!-- start -->
+<!-- 查询组织机构 包含子节点 -->
+  <sql id="Contains_Where_Clause">
+	where 1=1
+	<if test="orgId != null and orgId !=''">
+		AND org_id = #{orgId,jdbcType=VARCHAR}
+	</if>
+	<if test="orgName != null and orgName !=''">
+		AND name = #{orgName,jdbcType=VARCHAR}
+	</if>
+	<if test="parentId != null and parentId !=''">
+		AND parent_id = #{parentId,jdbcType=INTEGER}
+	</if>
+	<if test="status != null ">
+		AND deleteFlag = #{status,jdbcType=TINYINT}
+	</if>
+	<if test="isVisible != null ">
+		AND visibleFlag = #{isVisible,jdbcType=BOOLEAN}
+	</if>
+	<if test="orgSource != null ">
+		AND org_source = #{orgSource,jdbcType=TINYINT}
+	</if>
+	<if test="encoding != null and encoding !='' ">
+		AND encoding = #{encoding,jdbcType=VARCHAR}
+	</if>
+	<if test="childIds != null ">
+		AND org_id in
+		<foreach item="item" index="index" collection="childIds" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
+	</if>
+	<!-- 模糊查询 -->
+     <if test="keywords != null and keywords != ''"><!-- 关键词检索 -->
+	   and
+	   	(
+	    	name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	   	   or pinyin LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	   	 )
+     </if>
+  </sql>
+  <!--包含子组织查询机构总和  -->
+  <select id="selectContainCountByObj" parameterType="sysOrg" resultType="long">
+		SELECT COUNT(1) COUN FROM zst_organization
+		<include refid="Contains_Where_Clause" />
+  </select>
+  
+  <!-- 包含子组织分页查询  -->
+  <select id="selectContainListByObj" parameterType="sysOrg" resultMap="BaseResultMap">		
+		select 
+		<include refid="Base_Column_List" />
+		from zst_organization
+		<include refid="Contains_Where_Clause" />
+		<if test="pagestart>-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <!-- end -->  
+
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zst_organization
+    where org_id = #{orgId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.SysOrg" useGeneratedKeys="true" keyProperty="orgId">
+    insert into zst_organization
+     (
+    	  org_id, name, parent_id, org_level, order_num, description, create_time, update_time, 
+    	  creator_id, deleteFlag, code, have_device, have_child, visibleFlag, zoom, longitude, latitude, org_type ,org_source ,encoding,pinyin
+     )
+     values 
+      (
+	      #{orgId,jdbcType=INTEGER}, #{orgName,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
+	      #{orgLevel,jdbcType=INTEGER}, #{orderNum,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR},
+	      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=INTEGER},
+	      #{status,jdbcType=TINYINT}, #{orgCode,jdbcType=VARCHAR}, #{haveDevice,jdbcType=INTEGER},
+	      #{haveChild,jdbcType=INTEGER},#{isVisible,jdbcType=BIT},#{zoom,jdbcType=INTEGER},
+	      #{longitude,jdbcType=DOUBLE},#{latitude,jdbcType=DOUBLE},#{type,jdbcType=INTEGER},
+	      #{orgSource,jdbcType=INTEGER}, #{encoding,jdbcType=VARCHAR} , #{pinyin,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.SysOrg" useGeneratedKeys="true" keyProperty="orgId">
+    insert into zst_organization
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="orgName != null" >
+        name,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="orgLevel != null" >
+        org_level,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="status != null" >
+        deleteFlag,
+      </if>
+      <if test="orgCode != null" >
+        code,
+      </if>
+      <if test="haveDevice != null" >
+        have_device,
+      </if>
+      <if test="haveChild != null" >
+        have_child,
+      </if>
+      <if test="isVisible != null" >
+        visibleFlag,
+      </if>
+      <if test="zoom != null" >
+        zoom,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="type != null" >
+        org_type,
+      </if>
+      <if test="orgSource != null" >
+        org_source,
+      </if>
+      <if test="encoding != null" >
+        encoding,
+      </if>
+      <if test="pinyin != null" >
+        pinyin,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="orgName != null" >
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="orgLevel != null" >
+        #{orgLevel,jdbcType=INTEGER},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="haveDevice != null" >
+        #{haveDevice,jdbcType=INTEGER},
+      </if>
+      <if test="haveChild != null" >
+        #{haveChild,jdbcType=INTEGER},
+      </if>
+      <if test="isVisible != null" >
+        #{isVisible,jdbcType=BIT},
+      </if>
+      <if test="zoom != null" >
+        #{zoom,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="orgSource != null" >
+        #{orgSource,jdbcType=INTEGER},
+      </if>
+      <if test="encoding != null" >
+        #{encoding,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        #{pinyin,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 假删除数据 -->
+  <update id="updateBatchByOrgIds" parameterType="java.util.List">
+	update zst_organization SET deleteFlag = 1  WHERE org_id in 
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.SysOrg" >
+    update zst_organization
+    <set >
+      <if test="orgName != null" >
+        name = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="orgLevel != null" >
+        org_level = #{orgLevel,jdbcType=INTEGER},
+      </if>
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        deleteFlag = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="orgCode != null" >
+        code = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="haveDevice != null" >
+        have_device = #{haveDevice,jdbcType=TINYINT},
+      </if>
+      <if test="haveChild != null" >
+        have_child = #{haveChild,jdbcType=TINYINT},
+      </if>
+      <if test="isVisible != null" >
+        visibleFlag = #{isVisible,jdbcType=BIT},
+      </if>
+      <if test="zoom != null" >
+        zoom = #{zoom,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="type != null" >
+        org_type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="orgSource != null" >
+        org_source = #{orgSource,jdbcType=INTEGER},
+      </if>
+      <if test="encoding != null" >
+        encoding = #{encoding,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        pinyin = #{pinyin,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where org_id = #{orgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.SysOrg" >
+    update zst_organization
+    set org_name = #{orgName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      org_level = #{orgLevel,jdbcType=INTEGER},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      deleteFlag = #{status,jdbcType=TINYINT},
+      code = #{orgCode,jdbcType=VARCHAR},
+      have_device = #{haveDevice,jdbcType=TINYINT},
+      have_child = #{haveChild,jdbcType=TINYINT},
+      visibleFlag = #{isVisible,jdbcType=BIT},
+      zoom = #{zoom,jdbcType=INTEGER},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      org_type = #{type,jdbcType=INTEGER},
+      org_source = #{orgSource,jdbcType=INTEGER},
+      encoding = #{encoding,jdbcType=VARCHAR},
+      pinyin = #{pinyin,jdbcType=VARCHAR}
+    where org_id = #{orgId,jdbcType=INTEGER}
+  </update>
+  
+  
+   <!-- 批量设置可见性 -->
+  <update id="updateBatchOrgVisible" parameterType="java.util.Map">
+	update zst_organization SET visibleFlag = #{visibleflag}
+	 WHERE org_id in 
+	<foreach item="ids" index="index" collection="ids" open="(" separator="," close=")">
+		#{ids}
+	</foreach>
+  </update>
+</mapper>

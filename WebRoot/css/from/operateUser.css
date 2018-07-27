@@ -1,0 +1,66 @@
+#fm{
+		margin-left: 30px;
+		}
+  		#meetingRoomDesc{
+			height: 100px;
+		    width: 520px;
+		    float: left;
+		}
+		textarea{
+		    resize: none;
+		    padding: 10px;
+		    margin-top: 10px;
+		    border-radius: 3px;
+		    float: left;
+		    width: 520px;
+		    height: 118px;
+		    margin-left: 16px;
+			} 
+		#miaoshu{
+			display: block;
+		    float: left;
+		    width: 70px;
+		    font-size: 16px;
+		    margin-top: 10px;
+		}
+		input{
+			border-radius: 3px;
+		    padding-left: 10px;
+		    height: 28px;
+		}
+		td{
+    		padding: 5px 0 5px 0;
+    		line-height: 24px;
+    		 width:80px; 
+		}
+			select{
+			line-height: 30px;
+		    height: 28px;
+		    border-radius: 3px;
+		    width: 100px;
+		    padding-left:10px
+		}
+		.btn-foot{
+		    display: inline-block;
+		    width: 100%;
+		    text-align: center;
+		    margin-top: 16px;
+		}
+		#save{
+			background: #399efc;
+		    border: 0;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #fff;
+		    margin: 0 20px;
+		}
+		#cancel{
+			background: #fff;
+		    border: 1px #399efc solid ;
+		    border-radius: 3px;
+		    line-height: 30px;
+		    padding: 0 22px;
+		    color: #399efc;
+		    margin: 0 20px;
+		}

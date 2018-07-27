@@ -1,0 +1,16 @@
+body,html{height:100%;}
+.type_center{
+	height:100%
+}
+.type_left{
+	height:100%; 
+	float:left; 
+	width:20%;
+	border-right:1px solid #eee;
+	border-image: -webkit-radial-gradient( #f7f7f7,#ababab,#f7f7f7) 30 30;
+}
+.type_right{
+	overflow:hidden;
+	height:100%;
+}
+iframe{border: 0;}

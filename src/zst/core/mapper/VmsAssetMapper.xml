@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.VmsAssetMapper" >
+<!-- 单表查询 -->
+  <resultMap id="BaseResultMap" type="zst.core.entity.VmsAsset" >
+    <id column="asset_id" property="assetId" jdbcType="INTEGER" />
+    <result column="deviceType_id" property="devicetypeId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+    <result column="orderNumber" property="ordernumber" jdbcType="INTEGER" />
+    <result column="deleteFlag" property="deleteflag" jdbcType="BIT" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="buyTime" property="buytime" jdbcType="TIMESTAMP" />
+    <result column="setupTime" property="setuptime" jdbcType="TIMESTAMP" />
+    <result column="guaranteeTime" property="guaranteetime" jdbcType="TIMESTAMP" />
+    <result column="maintainMan" property="maintainman" jdbcType="VARCHAR" />
+    <result column="maintainPhone" property="maintainphone" jdbcType="VARCHAR" />
+    <result column="setupPosition" property="setupposition" jdbcType="VARCHAR" />
+    <result column="setupProvider" property="setupprovider" jdbcType="VARCHAR" />
+    <result column="pictureUrl" property="pictureurl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    
+    <result column="vendor_id" property="vendorId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    asset_id, deviceType_id, name, code, pinyin, orderNumber, deleteFlag, level, buyTime, 
+    setupTime, guaranteeTime, maintainMan, maintainPhone, setupPosition, setupProvider, 
+    pictureUrl, status , vendor_id, product_id, model_id
+  </sql>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="assetId != null ">
+		AND asset_id = #{assetId,jdbcType=INTEGER}
+	</if>
+	<if test="devicetypeId != null ">
+		AND deviceType_id = #{devicetypeId,jdbcType=INTEGER}
+	</if>
+	<if test="name != null and name != '' ">
+		AND name = #{name,jdbcType=VARCHAR}
+	</if>
+	<if test="code != null ">
+		AND code = #{code,jdbcType=VARCHAR}
+	</if>
+	<if test="pinyin != null ">
+		AND pinyin = #{pinyin,jdbcType=VARCHAR}
+	</if>
+	<if test="ordernumber != null ">
+		AND orderNumber = #{ordernumber,jdbcType=INTEGER}
+	</if>
+	<if test="deleteflag != null ">
+		AND deleteFlag = #{deleteflag,jdbcType=BOOLEAN}
+	</if>
+	<if test="level != null ">
+		AND level = #{level,jdbcType=VARCHAR}
+	</if>
+	<if test="maintainman != null ">
+		AND maintainMan = #{maintainman,jdbcType=VARCHAR}
+	</if>
+	<if test="setupprovider != null ">
+		AND setupProvider = #{setupprovider,jdbcType=VARCHAR}
+	</if>
+	<if test="status != null ">
+		AND status = #{status,jdbcType=INTEGER}
+	</if>
+	<if test="vendorId != null ">
+		AND vendor_id = #{vendorId,jdbcType=INTEGER}
+	</if>
+	<if test="productId != null ">
+		AND product_id = #{productId,jdbcType=INTEGER}
+	</if>
+	<if test="modelId != null ">
+		AND model_id = #{modelId,jdbcType=INTEGER}
+	</if>
+  </sql>
+  
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.VmsAsset" resultType="long">
+		SELECT COUNT(1) COUN FROM vms_asset
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.VmsAsset" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from vms_asset
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <!-- 仅仅联合部门查询 -->
+  <!-- 单表查询 -->
+  <resultMap id="BaseResultMapOrg" type="zst.core.entity.VmsAsset" >
+    <id column="asset_id" property="assetId" jdbcType="INTEGER" />
+    <result column="deviceType_id" property="devicetypeId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+    <result column="orderNumber" property="ordernumber" jdbcType="INTEGER" />
+    <result column="deleteFlag" property="deleteflag" jdbcType="BIT" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="buyTime" property="buytime" jdbcType="TIMESTAMP" />
+    <result column="setupTime" property="setuptime" jdbcType="TIMESTAMP" />
+    <result column="guaranteeTime" property="guaranteetime" jdbcType="TIMESTAMP" />
+    <result column="maintainMan" property="maintainman" jdbcType="VARCHAR" />
+    <result column="maintainPhone" property="maintainphone" jdbcType="VARCHAR" />
+    <result column="setupPosition" property="setupposition" jdbcType="VARCHAR" />
+    <result column="setupProvider" property="setupprovider" jdbcType="VARCHAR" />
+    <result column="pictureUrl" property="pictureurl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    
+    <result column="vendor_id" property="vendorId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    
+    <result column="orgId" property="orgId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <!-- 联表查询 -->
+  <resultMap id="MultiBaseResultMap" type="zst.core.entity.VmsAsset" >
+    <id column="asset_id" property="assetId" jdbcType="INTEGER" />
+    <result column="deviceType_id" property="devicetypeId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+    <result column="orderNumber" property="ordernumber" jdbcType="INTEGER" />
+    <result column="deleteFlag" property="deleteflag" jdbcType="BIT" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="buyTime" property="buytime" jdbcType="TIMESTAMP" />
+    <result column="setupTime" property="setuptime" jdbcType="TIMESTAMP" />
+    <result column="guaranteeTime" property="guaranteetime" jdbcType="TIMESTAMP" />
+    <result column="maintainMan" property="maintainman" jdbcType="VARCHAR" />
+    <result column="maintainPhone" property="maintainphone" jdbcType="VARCHAR" />
+    <result column="setupPosition" property="setupposition" jdbcType="VARCHAR" />
+    <result column="setupProvider" property="setupprovider" jdbcType="VARCHAR" />
+    <result column="pictureUrl" property="pictureurl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="vendor_id" property="vendorId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    
+    <!-- 联表字段 -->
+    <result column="deviceTypeName" property="deviceTypeName" jdbcType="VARCHAR" />
+    <result column="vendorName" property="vendorName" jdbcType="VARCHAR" />
+    <result column="productName" property="productName" jdbcType="VARCHAR" />
+    <result column="modelName" property="modelName" jdbcType="VARCHAR" />
+    <result column="orgId" property="orgId" jdbcType="INTEGER" />
+    <result column="orgName" property="orgName" jdbcType="VARCHAR" />
+    <result column="visibleFlag" property="visibleFlagX" jdbcType="BIT" />
+    <result column="sourceFlag" property="sourceFlagX" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Multi_Example_Where_Clause">
+	where 1=1
+	<if test="assetId != null ">
+		AND vms_asset.asset_id = #{assetId,jdbcType=INTEGER}
+	</if>
+	<if test="devicetypeId != null ">
+		AND vms_asset.deviceType_id = #{devicetypeId,jdbcType=INTEGER}
+	</if>
+	<if test="name != null and name != '' ">
+		AND vms_asset.name = #{name,jdbcType=VARCHAR}
+	</if>
+	<if test="code != null and code != '' ">
+		AND vms_asset.code = #{code,jdbcType=VARCHAR}
+	</if>
+	<if test="pinyin != null and pinyin != '' ">
+		AND vms_asset.pinyin = #{pinyin,jdbcType=VARCHAR}
+	</if>
+	<if test="ordernumber != null ">
+		AND vms_asset.orderNumber = #{ordernumber,jdbcType=INTEGER}
+	</if>
+	<if test="deleteflag != null ">
+		AND vms_asset.deleteFlag = #{deleteflag,jdbcType=BOOLEAN}
+	</if>
+	<if test="level != null and level != '' ">
+		AND vms_asset.level = #{level,jdbcType=VARCHAR}
+	</if>
+	<if test="maintainman != null and maintainman != '' ">
+		AND vms_asset.maintainMan = #{maintainman,jdbcType=VARCHAR}
+	</if>
+	<if test="setupprovider != null ">
+		AND vms_asset.setupProvider = #{setupprovider,jdbcType=VARCHAR}
+	</if>
+	<if test="status != null ">
+		AND vms_asset.status = #{status,jdbcType=INTEGER}
+	</if>
+	<if test="vendorId != null ">
+		AND vms_asset.vendor_id = #{vendorId,jdbcType=INTEGER}
+	</if>
+	<if test="productId != null ">
+		AND vms_asset.product_id = #{productId,jdbcType=INTEGER}
+	</if>
+	<if test="modelId != null ">
+		AND vms_asset.model_id = #{modelId,jdbcType=INTEGER}
+	</if>
+	
+	<!-- 联表查询 -->
+	<if test="orgId != null ">
+		AND vms_org_asset.org_id = #{orgId,jdbcType=INTEGER}
+	</if>
+	<if test="visibleFlagX != null ">
+		AND vms_org_asset.visibleFlag = #{visibleFlagX,jdbcType=BIT}
+	</if>
+	<if test="sourceFlagX != null ">
+		AND vms_org_asset.sourceFlag = #{sourceFlagX,jdbcType=INTEGER}
+	</if>
+	
+	<!-- 模糊查询 -->
+     <if test="keywords != null and keywords != ''">
+	   and vms_asset.name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+     </if>
+  </sql>
+  
+  <!--查询条数  -->
+  <select id="selectMultiCountByObj" parameterType="zst.core.entity.VmsAsset" resultType="long">
+		SELECT COUNT(DISTINCT vms_asset.asset_id) COUN FROM
+		vms_asset
+		left join
+			vms_org_asset on vms_org_asset.asset_id = vms_asset.asset_id
+		left join
+			zst_organization on zst_organization.org_id = vms_org_asset.org_id
+		<include refid="Multi_Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectMultiListByObj" parameterType="zst.core.entity.VmsAsset" resultMap="MultiBaseResultMap">		
+		select
+			vms_asset.asset_id as asset_id, vms_asset.deviceType_id as deviceType_id, vms_asset.name as name, vms_asset.code as code , vms_asset.pinyin as pinyin, 
+			vms_asset.orderNumber as orderNumber, vms_asset.deleteFlag as deleteFlag, vms_asset.level as level, vms_asset.buyTime as buyTime, 
+		    vms_asset.setupTime as setupTime, vms_asset.guaranteeTime as guaranteeTime, vms_asset.maintainMan as maintainMan, vms_asset.maintainPhone as maintainPhone,
+		    vms_asset.setupPosition as setupPosition, vms_asset.setupProvider as setupProvider, vms_asset.pictureUrl as pictureUrl, vms_asset.status as status,
+		    vms_asset.vendor_id as vendor_id, vms_asset.product_id as product_id, vms_asset.model_id as model_id,
+		    
+		    vms_devicetype.name as deviceTypeName,
+		    vms_vendor.name as vendorName,
+		    vms_product.name as productName,
+		    vms_model.name as modelName,
+		    
+		    vms_org_asset.visibleFlag as visibleFlag,
+		    vms_org_asset.sourceFlag as sourceFlag,
+		    
+		    zst_organization.org_id as orgId,
+		    zst_organization.name as orgName
+		    
+			from vms_asset
+			
+			left join
+				vms_devicetype on vms_devicetype.id = vms_asset.deviceType_id
+			left join
+				vms_vendor on vms_vendor.vendor_id = vms_asset.vendor_id
+			left join
+				vms_product on vms_product.product_id = vms_asset.product_id
+			left join
+				vms_model on vms_model.model_id = vms_asset.model_id
+			left join
+				vms_org_asset on vms_org_asset.asset_id = vms_asset.asset_id
+			left join
+				zst_organization on zst_organization.org_id = vms_org_asset.org_id
+		<include refid="Multi_Example_Where_Clause" />
+		GROUP BY vms_asset.asset_id
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  
+  <!-- start携带子部门查询设备 -->
+  <!-- 携带子部门查询条件 -->
+    <sql id="MultiMap_Example_Where_Clause">
+	where 1=1
+	<if test="asset.assetId != null ">
+		AND vms_asset.asset_id = #{asset.assetId,jdbcType=INTEGER}
+	</if>
+	<if test="asset.devicetypeId != null ">
+		AND vms_asset.deviceType_id = #{asset.devicetypeId,jdbcType=INTEGER}
+	</if>
+	<if test="asset.name != null and asset.name != '' ">
+		AND vms_asset.name = #{asset.name,jdbcType=VARCHAR}
+	</if>
+	<if test="asset.code != null and asset.code != '' ">
+		AND vms_asset.code = #{asset.code,jdbcType=VARCHAR}
+	</if>
+	<if test="asset.pinyin != null and asset.pinyin != '' ">
+		AND vms_asset.pinyin = #{asset.pinyin,jdbcType=VARCHAR}
+	</if>
+	<if test="asset.ordernumber != null ">
+		AND vms_asset.orderNumber = #{asset.ordernumber,jdbcType=INTEGER}
+	</if>
+	<if test="asset.deleteflag != null ">
+		AND vms_asset.deleteFlag = #{asset.deleteflag,jdbcType=BOOLEAN}
+	</if>
+	<if test="asset.level != null and asset.level != '' ">
+		AND vms_asset.level = #{asset.level,jdbcType=VARCHAR}
+	</if>
+	<if test="asset.maintainman != null and asset.maintainman != '' ">
+		AND vms_asset.maintainMan = #{asset.maintainman,jdbcType=VARCHAR}
+	</if>
+	<if test="asset.setupprovider != null ">
+		AND vms_asset.setupProvider = #{asset.setupprovider,jdbcType=VARCHAR}
+	</if>
+	<if test="asset.status != null ">
+		AND vms_asset.status = #{asset.status,jdbcType=INTEGER}
+	</if>
+	<if test="asset.vendorId != null ">
+		AND vms_asset.vendor_id = #{asset.vendorId,jdbcType=INTEGER}
+	</if>
+	<if test="asset.productId != null ">
+		AND vms_asset.product_id = #{asset.productId,jdbcType=INTEGER}
+	</if>
+	<if test="asset.modelId != null ">
+		AND vms_asset.model_id = #{asset.modelId,jdbcType=INTEGER}
+	</if>
+	
+	<!-- 联表查询  多个部门查询  -->
+	<if test="asset.orgId == null ">
+		AND vms_org_asset.org_id in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item,jdbcType=INTEGER}
+			</foreach>
+	</if>
+	<if test="asset.visibleFlagX != null ">
+		AND vms_org_asset.visibleFlag = #{asset.visibleFlagX,jdbcType=BIT}
+	</if>
+	<if test="asset.sourceFlagX != null ">
+		AND vms_org_asset.sourceFlag = #{asset.sourceFlagX,jdbcType=INTEGER}
+	</if>
+	
+	<!-- 模糊查询 -->
+     <if test="asset.keywords != null and asset.keywords != ''">
+	   and vms_asset.name LIKE CONCAT(CONCAT('%', #{asset.keywords}),'%')
+     </if>
+  </sql>
+  <!--携带子部门查询条数  -->
+  <select id="selectMultiCountByMap" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(DISTINCT vms_asset.asset_id) COUN FROM
+		vms_asset
+		left join
+			vms_org_asset on vms_org_asset.asset_id = vms_asset.asset_id
+		left join
+			zst_organization on zst_organization.org_id = vms_org_asset.org_id
+		<include refid="MultiMap_Example_Where_Clause" />
+  </select>
+  <!--携带子部门分页查询  -->
+  <select id="selectMultiListByMap" parameterType="java.util.Map" resultMap="MultiBaseResultMap">		
+		select
+			vms_asset.asset_id as asset_id, vms_asset.deviceType_id as deviceType_id, vms_asset.name as name, vms_asset.code as code , vms_asset.pinyin as pinyin, 
+			vms_asset.orderNumber as orderNumber, vms_asset.deleteFlag as deleteFlag, vms_asset.level as level, vms_asset.buyTime as buyTime, 
+		    vms_asset.setupTime as setupTime, vms_asset.guaranteeTime as guaranteeTime, vms_asset.maintainMan as maintainMan, vms_asset.maintainPhone as maintainPhone,
+		    vms_asset.setupPosition as setupPosition, vms_asset.setupProvider as setupProvider, vms_asset.pictureUrl as pictureUrl, vms_asset.status as status,
+		    vms_asset.vendor_id as vendor_id, vms_asset.product_id as product_id, vms_asset.model_id as model_id,
+		    
+		    vms_devicetype.name as deviceTypeName,
+		    vms_vendor.name as vendorName,
+		    vms_product.name as productName,
+		    vms_model.name as modelName,
+		    
+		    vms_org_asset.visibleFlag as visibleFlag,
+		    vms_org_asset.sourceFlag as sourceFlag,
+		    
+		    zst_organization.org_id as orgId,
+		    zst_organization.name as orgName
+		    
+			from vms_asset
+			
+			left join
+				vms_devicetype on vms_devicetype.id = vms_asset.deviceType_id
+			left join
+				vms_vendor on vms_vendor.vendor_id = vms_asset.vendor_id
+			left join
+				vms_product on vms_product.product_id = vms_asset.product_id
+			left join
+				vms_model on vms_model.model_id = vms_asset.model_id
+			left join
+				vms_org_asset on vms_org_asset.asset_id = vms_asset.asset_id
+			left join
+				zst_organization on zst_organization.org_id = vms_org_asset.org_id
+		<include refid="MultiMap_Example_Where_Clause" />
+		GROUP BY vms_asset.asset_id
+		<if test="asset.pagestart >-1 and asset.pageend>0">
+			limit #{asset.pagestart},#{asset.pageend}
+		</if>
+  </select>
+  <!-- end携带子部门查询设备 -->
+  
+  <!-- 根据部门id集合查询出所有的设备 -->
+  <select id="selectListByOrgList" resultMap="BaseResultMapOrg" parameterType="java.util.List" >
+    select
+    	vms_asset.asset_id as asset_id, vms_asset.deviceType_id as deviceType_id, vms_asset.name as name, vms_asset.code as code , vms_asset.pinyin as pinyin, 
+		vms_asset.orderNumber as orderNumber, vms_asset.deleteFlag as deleteFlag, vms_asset.level as level, vms_asset.buyTime as buyTime, 
+	    vms_asset.setupTime as setupTime, vms_asset.guaranteeTime as guaranteeTime, vms_asset.maintainMan as maintainMan, vms_asset.maintainPhone as maintainPhone,
+	    vms_asset.setupPosition as setupPosition, vms_asset.setupProvider as setupProvider, vms_asset.pictureUrl as pictureUrl, vms_asset.status as status,
+	    vms_asset.vendor_id as vendor_id, vms_asset.product_id as product_id, vms_asset.model_id as model_id,
+	    
+	    vms_org_asset.org_id as orgId
+    from vms_org_asset
+    left join vms_asset
+    on vms_org_asset.asset_id = vms_asset.asset_id
+    WHERE
+    vms_org_asset.org_id in 
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </select>
+  
+  <!-- 根据设备主键id批量查询设备 -->
+  <resultMap id="PartCloumnMap" type="zst.core.entity.VmsAsset" >
+    <id column="asset_id" property="assetId" jdbcType="INTEGER" />
+    <result column="deviceType_id" property="devicetypeId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectListByIds" resultMap="PartCloumnMap" parameterType="java.util.List" >
+    select
+    	vms_asset.asset_id, vms_asset.deviceType_id, vms_asset.name
+    from vms_asset
+    WHERE
+    vms_asset.asset_id in 
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </select>
+  
+   <!-- 批量更新状态 -->
+  <update id="updateBatchByAssetIds" parameterType="java.util.List">
+	update vms_asset SET deleteFlag = b'1' WHERE asset_id in 
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from vms_asset
+    where asset_id = #{assetId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from vms_asset
+    where asset_id = #{assetId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.VmsAsset" useGeneratedKeys="true" keyProperty="assetId" >
+    insert into vms_asset (asset_id, deviceType_id, name, 
+      code, pinyin, orderNumber, 
+      deleteFlag, level, buyTime, 
+      setupTime, guaranteeTime, maintainMan, 
+      maintainPhone, setupPosition, setupProvider, 
+      pictureUrl, status , vendor_id, 
+      product_id, model_id)
+    values (#{assetId,jdbcType=INTEGER}, #{devicetypeId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{pinyin,jdbcType=VARCHAR}, #{ordernumber,jdbcType=INTEGER}, 
+      #{deleteflag,jdbcType=BIT}, #{level,jdbcType=VARCHAR}, #{buytime,jdbcType=TIMESTAMP}, 
+      #{setuptime,jdbcType=TIMESTAMP}, #{guaranteetime,jdbcType=TIMESTAMP}, #{maintainman,jdbcType=VARCHAR}, 
+      #{maintainphone,jdbcType=VARCHAR}, #{setupposition,jdbcType=VARCHAR}, #{setupprovider,jdbcType=VARCHAR}, 
+      #{pictureurl,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER} , #{vendorId,jdbcType=INTEGER}, 
+      #{productId,jdbcType=INTEGER}, #{modelId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.VmsAsset" useGeneratedKeys="true" keyProperty="assetId"  >
+    insert into vms_asset
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="assetId != null" >
+        asset_id,
+      </if>
+      <if test="devicetypeId != null" >
+        deviceType_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="pinyin != null" >
+        pinyin,
+      </if>
+      <if test="ordernumber != null" >
+        orderNumber,
+      </if>
+      <if test="deleteflag != null" >
+        deleteFlag,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="buytime != null" >
+        buyTime,
+      </if>
+      <if test="setuptime != null" >
+        setupTime,
+      </if>
+      <if test="guaranteetime != null" >
+        guaranteeTime,
+      </if>
+      <if test="maintainman != null" >
+        maintainMan,
+      </if>
+      <if test="maintainphone != null" >
+        maintainPhone,
+      </if>
+      <if test="setupposition != null" >
+        setupPosition,
+      </if>
+      <if test="setupprovider != null" >
+        setupProvider,
+      </if>
+      <if test="pictureurl != null" >
+        pictureUrl,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="vendorId != null" >
+        vendor_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="assetId != null" >
+        #{assetId,jdbcType=INTEGER},
+      </if>
+      <if test="devicetypeId != null" >
+        #{devicetypeId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="ordernumber != null" >
+        #{ordernumber,jdbcType=INTEGER},
+      </if>
+      <if test="deleteflag != null" >
+        #{deleteflag,jdbcType=BIT},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="buytime != null" >
+        #{buytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="setuptime != null" >
+        #{setuptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="guaranteetime != null" >
+        #{guaranteetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maintainman != null" >
+        #{maintainman,jdbcType=VARCHAR},
+      </if>
+      <if test="maintainphone != null" >
+        #{maintainphone,jdbcType=VARCHAR},
+      </if>
+      <if test="setupposition != null" >
+        #{setupposition,jdbcType=VARCHAR},
+      </if>
+      <if test="setupprovider != null" >
+        #{setupprovider,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureurl != null" >
+        #{pictureurl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="vendorId != null" >
+        #{vendorId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.VmsAsset" >
+    update vms_asset
+    <set >
+      <if test="devicetypeId != null" >
+        deviceType_id = #{devicetypeId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null" >
+        pinyin = #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="ordernumber != null" >
+        orderNumber = #{ordernumber,jdbcType=INTEGER},
+      </if>
+      <if test="deleteflag != null" >
+        deleteFlag = #{deleteflag,jdbcType=BIT},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="buytime != null" >
+        buyTime = #{buytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="setuptime != null" >
+        setupTime = #{setuptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="guaranteetime != null" >
+        guaranteeTime = #{guaranteetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maintainman != null" >
+        maintainMan = #{maintainman,jdbcType=VARCHAR},
+      </if>
+      <if test="maintainphone != null" >
+        maintainPhone = #{maintainphone,jdbcType=VARCHAR},
+      </if>
+      <if test="setupposition != null" >
+        setupPosition = #{setupposition,jdbcType=VARCHAR},
+      </if>
+      <if test="setupprovider != null" >
+        setupProvider = #{setupprovider,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureurl != null" >
+        pictureUrl = #{pictureurl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="vendorId != null" >
+        vendor_id = #{vendorId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where asset_id = #{assetId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.VmsAsset" >
+    update vms_asset
+    set deviceType_id = #{devicetypeId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      pinyin = #{pinyin,jdbcType=VARCHAR},
+      orderNumber = #{ordernumber,jdbcType=INTEGER},
+      deleteFlag = #{deleteflag,jdbcType=BIT},
+      level = #{level,jdbcType=VARCHAR},
+      buyTime = #{buytime,jdbcType=TIMESTAMP},
+      setupTime = #{setuptime,jdbcType=TIMESTAMP},
+      guaranteeTime = #{guaranteetime,jdbcType=TIMESTAMP},
+      maintainMan = #{maintainman,jdbcType=VARCHAR},
+      maintainPhone = #{maintainphone,jdbcType=VARCHAR},
+      setupPosition = #{setupposition,jdbcType=VARCHAR},
+      setupProvider = #{setupprovider,jdbcType=VARCHAR},
+      pictureUrl = #{pictureurl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      vendor_id = #{vendorId,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=INTEGER},
+      model_id = #{modelId,jdbcType=INTEGER},
+    where asset_id = #{assetId,jdbcType=INTEGER}
+  </update>
+  
+     <!-- 批量设置可见性 -->
+<!--   <update id="updateBatchAssetVisible" parameterType="java.util.Map">
+	update vms_asset SET visibleFlag = #{visibleflag}
+	 WHERE asset_id in 
+	<foreach item="ids" index="index" collection="ids" open="(" separator="," close=")">
+		#{ids}
+	</foreach>
+  </update> -->
+  
+  <!-- 批量设置级别 -->
+  <update id="updateBatchAssetLevel" parameterType="java.util.Map">
+	update vms_asset SET level = #{level}
+	 WHERE asset_id in 
+	<foreach item="ids" index="index" collection="ids" open="(" separator="," close=")">
+		#{ids}
+	</foreach>
+  </update>
+</mapper>

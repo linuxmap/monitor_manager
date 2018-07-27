@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.VRoleTreeOrgAssetMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.VRoleTreeOrgAsset" >
+  	<result column="asset_uuid" property="assetUUID" jdbcType="VARCHAR" />
+    <result column="asset_id" property="assetId" jdbcType="INTEGER" />
+    <result column="device_type_id" property="deviceTypeId" jdbcType="INTEGER" />
+    <result column="asset_name" property="assetName" jdbcType="VARCHAR" />
+    <result column="asset_orgid" property="assetOrgid" jdbcType="INTEGER" />
+    <result column="asset_orgname" property="assetOrgname" jdbcType="VARCHAR" />
+    <result column="org_visible" property="assetorgvisible" jdbcType="BIT" />
+    <result column="org_status" property="assetstatus" jdbcType="INTEGER" />
+    <result column="asset_visible" property="assetvisible" jdbcType="BIT" />
+    <result column="asset_status" property="deletetatus" jdbcType="BIT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+
+<!-- 此为视图，仅供于查询 -->
+
+  <sql id="Base_Column_List" >
+    asset_uuid, asset_id, device_type_id, asset_name, asset_orgid, asset_orgname, org_visible, org_status,asset_visible,asset_status, type
+  </sql>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="assetUUID != null ">
+		AND asset_uuid = #{assetUUID,jdbcType=VARCHAR}
+	</if>
+	<if test="assetId != null ">
+		AND asset_id = #{assetId,jdbcType=INTEGER}
+	</if>
+	<if test="deviceTypeId != null ">
+		AND device_type_id = #{deviceTypeId,jdbcType=INTEGER}
+	</if>
+	<if test="assetName != null ">
+		AND asset_name = #{assetName,jdbcType=VARCHAR}
+	</if>
+	<if test="assetOrgid != null ">
+		AND asset_orgid = #{assetOrgid,jdbcType=INTEGER}
+	</if>
+	<if test="assetOrgname != null ">
+		AND asset_orgname = #{assetOrgname,jdbcType=VARCHAR}
+	</if>
+	<if test="type != null ">
+		AND type = #{type,jdbcType=INTEGER}
+	</if>
+	<if test="assetorgvisible != null ">
+		AND org_visible = #{assetorgvisible,jdbcType=BIT}
+	</if>
+	<if test="assetvisible != null ">
+		AND asset_visible = #{assetvisible,jdbcType=BIT}
+	</if>
+	<if test="deletetatus != null ">
+		AND asset_status = #{deletetatus,jdbcType=BIT}
+	</if>
+	<if test="assetstatus != null ">
+		AND org_status = #{assetstatus,jdbcType=INTEGER}
+	</if>
+  </sql>
+  
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.VRoleTreeOrgAsset" resultType="long">
+		SELECT COUNT(1) COUN FROM v_roletree_org_asset
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.VRoleTreeOrgAsset" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from v_roletree_org_asset
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+
+</mapper>

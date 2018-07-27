@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.SysRoleCategoryFuntMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.SysRoleCategoryFunt" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="category_id" property="roleCategoryId" jdbcType="INTEGER" />
+    <result column="funt_id" property="funtId" jdbcType="INTEGER" />
+    <result column="funt_group" property="funtGroup" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, category_id, funt_id ,funt_group
+  </sql>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="roleCategoryId != null">
+		AND category_id = #{roleCategoryId,jdbcType=INTEGER}
+	</if>
+	<if test="funtId != null">
+		AND funt_id = #{funtId,jdbcType=INTEGER}
+	</if>
+	<if test="funtGroup != null">
+		AND funt_group = #{funtGroup,jdbcType=INTEGER}
+	</if>
+  </sql>
+  
+  <!--批量查询  -->
+  <select id="selectListByObj" parameterType="sysOrg" resultMap="BaseResultMap">		
+		select 
+		<include refid="Base_Column_List" />
+		from zst_category_funt
+		<include refid="Example_Where_Clause" />
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from zst_category_funt
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 根据角色id查询菜单功能 -->
+  <select id="selectByCategoryid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_category_funt
+    where category_id = #{roleCategoryId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zst_category_funt
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 传入对象删除 -->
+  <delete id="deleteByCategoryFunt" parameterType="zst.core.entity.SysRoleCategoryFunt" >
+    delete from zst_category_funt
+	where 1=1
+	<if test="id != null ">
+		AND id = #{id,jdbcType=INTEGER}
+	</if>
+	<if test="roleCategoryId != null ">
+		AND category_id = #{roleCategoryId,jdbcType=INTEGER}
+	</if>
+		<if test="funtId != null ">
+		AND funt_id = #{funtId,jdbcType=INTEGER}
+	</if>
+	<if test="funtGroup != null ">
+		AND funt_group = #{funtGroup,jdbcType=INTEGER}
+	</if>
+  </delete>
+  
+  <!-- 根据roleCategoryId删除所有功能菜单id -->
+   <delete id="deleteByCategoryid" parameterType="java.lang.Integer" >
+    delete from zst_category_funt
+    where category_id = #{roleCategoryId,jdbcType=INTEGER}
+  </delete>
+  <!-- 批量添加role和funt关联表 -->
+  <insert id="addList" parameterType="java.util.List" >
+    insert into zst_category_funt (id, category_id, funt_id ,funt_group
+      )
+    values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id,jdbcType=INTEGER}, #{item.roleCategoryId,jdbcType=INTEGER}, #{item.funtId,jdbcType=INTEGER}, #{item.funtGroup,jdbcType=INTEGER})
+    </foreach> 
+  </insert>
+  <insert id="insert" parameterType="zst.core.entity.SysRoleCategoryFunt" >
+    insert into zst_category_funt ( category_id, funt_id, funt_group )
+    values
+    (#{roleCategoryId,jdbcType=INTEGER}, #{funtId,jdbcType=INTEGER}, #{item.funtGroup,jdbcType=INTEGER} )
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.SysRoleCategoryFunt" >
+    insert into zst_category_funt
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleCategoryId != null" >
+        category_id,
+      </if>
+      <if test="funtId != null" >
+        funt_id,
+      </if>
+      <if test="funtGroup != null" >
+        funt_group,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="roleCategoryId != null" >
+        #{roleCategoryId,jdbcType=INTEGER},
+      </if>
+      <if test="funtId != null" >
+        #{funtId,jdbcType=INTEGER},
+      </if>
+      <if test="funtGroup != null" >
+        #{funtGroup,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.SysRoleCategoryFunt" >
+    update zst_category_funt
+    <set >
+      <if test="roleCategoryId != null" >
+        category_id = #{roleCategoryId,jdbcType=INTEGER},
+      </if>
+      <if test="funtId != null" >
+        funt_id = #{funtId,jdbcType=INTEGER},
+      </if>
+      <if test="funtGroup != null" >
+        funt_group = #{funtGroup,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.SysRoleCategoryFunt" >
+    update zst_category_funt
+    set 
+      category_id = #{roleCategoryId,jdbcType=INTEGER},
+      funt_id = #{funtId,jdbcType=INTEGER},
+      funt_group = #{funtGroup,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

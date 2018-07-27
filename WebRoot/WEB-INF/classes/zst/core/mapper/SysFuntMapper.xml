@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.SysFuntMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.SysFunt" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="funt_name" property="funtName" jdbcType="VARCHAR" />
+    <result column="funt_url" property="funtUrl" jdbcType="VARCHAR" />
+    <result column="funt_par_id" property="funtParId" jdbcType="INTEGER" />
+    <result column="funt_level" property="funtLevel" jdbcType="INTEGER" />
+    <result column="funt_status" property="funtStatus" jdbcType="INTEGER" />
+    <result column="funt_sort" property="funtSort" jdbcType="INTEGER" />
+    <result column="funt_desc" property="funtDesc" jdbcType="VARCHAR" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
+    <result column="funt_no" property="funtNo" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="funt_group" property="funtGroup" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, funt_name, funt_url, funt_par_id, funt_level, funt_status, funt_sort, 
+    funt_desc, class_name, funt_no, create_user_id, create_time, update_time ,funt_group
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_funt
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByFuntId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_funt
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询所有子菜单  管理端的权限管理 ，数据库直接查询状态正常的记录 -->
+  <select id="selectSubFunt" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_funt
+    where funt_par_id = #{id,jdbcType=INTEGER}
+    	  and funt_group = 1
+    	  and funt_status = 1
+    ORDER BY funt_level,funt_sort
+  </select>
+  
+  <!-- 查询所有客户端菜单  客户端的权限管理 -->
+  <select id="selectClientFunt" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zst_funt
+    where funt_group = 2 and funt_level = 1
+    ORDER BY funt_level,funt_sort
+  </select>
+  <!-- 查询所有子菜单 客户端的权限管理 -->
+  <select id="selectClientSubFunt" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_funt
+    where funt_par_id = #{id,jdbcType=INTEGER}
+    	  and funt_group = 2
+    ORDER BY funt_level,funt_sort
+  </select>
+  
+  
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="zst.core.entity.SysFunt" >
+    select 
+    <include refid="Base_Column_List" />
+    from zst_funt
+    <where>
+     <if test="id != null" >
+        id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="funtName != null" >
+       and funt_name = #{funtName,jdbcType=VARCHAR}
+      </if>
+      <if test="funtUrl != null" >
+        and funt_url =  #{funtUrl,jdbcType=VARCHAR}
+      </if>
+      <if test="funtParId != null" >
+        and funt_par_id = #{funtParId,jdbcType=INTEGER}
+      </if>
+      <if test="funtLevel != null" >
+        and funt_level = #{funtLevel,jdbcType=INTEGER}
+      </if>
+      <if test="funtStatus != null" >
+       and funt_status = #{funtStatus,jdbcType=INTEGER}
+      </if>
+      <if test="funtSort != null" >
+        and funt_sort = #{funtSort,jdbcType=INTEGER}
+      </if>
+      <if test="funtDesc != null" >
+        and funt_desc = #{funtDesc,jdbcType=VARCHAR}
+      </if>
+      <if test="className != null" >
+       and class_name = #{className,jdbcType=VARCHAR}
+      </if>
+      <if test="funtNo != null" >
+        and funt_no = #{funtNo,jdbcType=VARCHAR}
+      </if>
+      <if test="createUserId != null" >
+       and create_user_id = #{createUserId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+       and update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="funtGroup != null" >
+       and funt_group = #{funtGroup,jdbcType=INTEGER}
+      </if>
+    </where>
+    order by funt_sort
+  </select>
+  
+  <!-- 通过用户id查询对应的菜单权限 -->
+  <select id="selectFunByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	SELECT 
+	 <include refid="Base_Column_List" />
+	FROM
+		(SELECT 
+			DISTINCT(f.id), f.funt_name, f.funt_url,
+			f.funt_par_id, f.funt_level, f.funt_status,
+			f.funt_sort, f.funt_desc, f.class_name,
+			f.funt_no, f.create_user_id, f.create_time, f.update_time ,f.funt_group
+		FROM zst_user u 
+		LEFT JOIN zst_user_role ur ON ur.user_id = u.user_id
+		LEFT JOIN zst_role r on r.role_id = ur.role_id 
+		LEFT JOIN zst_category_funt cf ON cf.category_id = r.category_id
+		LEFT JOIN zst_funt f ON f.id = cf.funt_id
+		WHERE u.user_id = #{userId,jdbcType=INTEGER} and f.funt_group = 1 and f.funt_status = 1
+		ORDER BY f.funt_level,f.funt_sort) t
+  </select>
+
+  <!-- 通过角色id查询对应的菜单权限 -->
+  <select id="selectFunByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	SELECT 
+	 <include refid="Base_Column_List" />
+	FROM
+		(SELECT 
+			DISTINCT(f.id), f.funt_name, f.funt_url,
+			f.funt_par_id, f.funt_level, f.funt_status,
+			f.funt_sort, f.funt_desc, f.class_name,
+			f.funt_no, f.create_user_id, f.create_time, f.update_time ,f.funt_group
+		FROM
+			zst_funt f
+		LEFT JOIN zst_category_funt rf ON f.id = rf.funt_id
+		WHERE
+		rf.category_id = #{roleId,jdbcType=INTEGER} and f.funt_group = 1 and f.funt_status = 1
+		ORDER BY f.funt_level,f.funt_sort) t
+  </select>
+  
+  <!-- 逻辑删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+     update zst_funt set funt_status = 0
+     where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByFuntId" parameterType="java.lang.Integer" >
+    update zst_funt set funt_status = 0
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.SysFunt" useGeneratedKeys="true" keyProperty="id">
+    insert into zst_funt (id, funt_name, 
+      funt_url, funt_par_id, funt_level, 
+      funt_status, funt_sort, funt_desc, 
+      class_name, funt_no, create_user_id, 
+      create_time, update_time ,funt_group)
+    values (#{id,jdbcType=INTEGER}, #{funtName,jdbcType=VARCHAR}, 
+      #{funtUrl,jdbcType=VARCHAR}, #{funtParId,jdbcType=INTEGER}, #{funtLevel,jdbcType=INTEGER}, 
+      #{funtStatus,jdbcType=INTEGER}, #{funtSort,jdbcType=INTEGER}, #{funtDesc,jdbcType=VARCHAR}, 
+      #{className,jdbcType=VARCHAR}, #{funtNo,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},#{funtGroup,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.SysFunt" useGeneratedKeys="true" keyProperty="id">
+    insert into zst_funt
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="funtName != null" >
+        funt_name,
+      </if>
+      <if test="funtUrl != null" >
+        funt_url,
+      </if>
+      <if test="funtParId != null" >
+        funt_par_id,
+      </if>
+      <if test="funtLevel != null" >
+        funt_level,
+      </if>
+      <if test="funtStatus != null" >
+        funt_status,
+      </if>
+      <if test="funtSort != null" >
+        funt_sort,
+      </if>
+      <if test="funtDesc != null" >
+        funt_desc,
+      </if>
+      <if test="className != null" >
+        class_name,
+      </if>
+      <if test="funtNo != null" >
+        funt_no,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="funtGroup != null" >
+        funt_group,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="funtName != null" >
+        #{funtName,jdbcType=VARCHAR},
+      </if>
+      <if test="funtUrl != null" >
+        #{funtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="funtParId != null" >
+        #{funtParId,jdbcType=INTEGER},
+      </if>
+      <if test="funtLevel != null" >
+        #{funtLevel,jdbcType=INTEGER},
+      </if>
+      <if test="funtStatus != null" >
+        #{funtStatus,jdbcType=INTEGER},
+      </if>
+      <if test="funtSort != null" >
+        #{funtSort,jdbcType=INTEGER},
+      </if>
+      <if test="funtDesc != null" >
+        #{funtDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="funtNo != null" >
+        #{funtNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="funtGroup != null" >
+        #{funtGroup,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.SysFunt" >
+    update zst_funt
+    <set >
+      <if test="funtName != null" >
+        funt_name = #{funtName,jdbcType=VARCHAR},
+      </if>
+      <if test="funtUrl != null" >
+        funt_url = #{funtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="funtParId != null" >
+        funt_par_id = #{funtParId,jdbcType=INTEGER},
+      </if>
+      <if test="funtLevel != null" >
+        funt_level = #{funtLevel,jdbcType=INTEGER},
+      </if>
+      <if test="funtStatus != null" >
+        funt_status = #{funtStatus,jdbcType=INTEGER},
+      </if>
+      <if test="funtSort != null" >
+        funt_sort = #{funtSort,jdbcType=INTEGER},
+      </if>
+      <if test="funtDesc != null" >
+        funt_desc = #{funtDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="funtNo != null" >
+        funt_no = #{funtNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="funtGroup != null" >
+        funt_group = #{funtGroup,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByFuntId" parameterType="zst.core.entity.SysFunt" >
+    update zst_funt
+    <set >
+      <if test="funtName != null" >
+        funt_name = #{funtName,jdbcType=VARCHAR},
+      </if>
+      <if test="funtUrl != null" >
+        funt_url = #{funtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="funtParId != null" >
+        funt_par_id = #{funtParId,jdbcType=INTEGER},
+      </if>
+      <if test="funtLevel != null" >
+        funt_level = #{funtLevel,jdbcType=INTEGER},
+      </if>
+      <if test="funtStatus != null" >
+        funt_status = #{funtStatus,jdbcType=INTEGER},
+      </if>
+      <if test="funtSort != null" >
+        funt_sort = #{funtSort,jdbcType=INTEGER},
+      </if>
+      <if test="funtDesc != null" >
+        funt_desc = #{funtDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null" >
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="funtNo != null" >
+        funt_no = #{funtNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="funtGroup != null" >
+        funt_group = #{funtGroup,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.SysFunt" >
+    update zst_funt
+    set
+      funt_name = #{funtName,jdbcType=VARCHAR},
+      funt_url = #{funtUrl,jdbcType=VARCHAR},
+      funt_par_id = #{funtParId,jdbcType=VARCHAR},
+      funt_level = #{funtLevel,jdbcType=INTEGER},
+      funt_status = #{funtStatus,jdbcType=INTEGER},
+      funt_sort = #{funtSort,jdbcType=INTEGER},
+      funt_desc = #{funtDesc,jdbcType=VARCHAR},
+      class_name = #{className,jdbcType=VARCHAR},
+      funt_no = #{funtNo,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      funt_group = #{funtGroup,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

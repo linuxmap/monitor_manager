@@ -1,0 +1,859 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.SysUserMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.SysUser" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="login_pwd" property="loginPwd" jdbcType="VARCHAR" />
+    <result column="auth_type" property="authType" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="tell" property="tell" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="login_error_times" property="loginErrorTimes" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="photo_path" property="photoPath" jdbcType="VARCHAR" />
+    <result column="order_name" property="orderName" jdbcType="INTEGER" />
+    <result column="order_org" property="orderOrg" jdbcType="INTEGER" />
+    <!-- 扩展属性 -->
+    <result column="org_id" property="orgId" jdbcType="INTEGER"/>
+    <result column="name" property="orgName" jdbcType="VARCHAR"/>
+    <result column="pinyin" property="orgPinyin" jdbcType="VARCHAR"/>
+    <!-- 角色id -->
+    <result column="role_id_db" property="roleIdDb" jdbcType="INTEGER"/>
+  </resultMap>
+  
+  <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="userId != null ">
+		AND u.user_id = #{userId,jdbcType=INTEGER}
+	</if>
+	<if test="userName != null and userName !=''">
+		AND u.user_name = #{userName,jdbcType=VARCHAR}
+	</if>
+	<if test="loginName != null and loginName !=''">
+		AND u.login_name = #{loginName,jdbcType=VARCHAR}
+	</if>
+	
+	<!-- 用户名模糊查询 -->
+	<if test="fuzzyLoginName != null and fuzzyLoginName != ''">
+	   and u.login_name LIKE CONCAT(CONCAT('%', #{fuzzyLoginName}),'%')
+	</if>
+	
+	<!-- 姓名模糊查询 -->
+	<if test="fuzzyUserName != null and fuzzyUserName != ''">
+	   and u.user_name LIKE CONCAT(CONCAT('%', #{fuzzyUserName}),'%')
+	</if>
+	
+	<if test="loginPwd != null and loginPwd !=''">
+		AND u.login_pwd = #{loginPwd,jdbcType=VARCHAR}
+	</if>
+	<if test="phone != null and phone !=''">
+		AND u.phone = #{phone,jdbcType=VARCHAR}
+	</if>
+	<if test="status != null ">
+		AND u.status = #{status,jdbcType=INTEGER}
+	</if>
+	<if test="authType != null ">
+		AND u.auth_type = #{authType,jdbcType=INTEGER}
+	</if>
+	<if test="orgId != null ">
+		AND o.org_id = #{orgId,jdbcType=INTEGER}
+	</if>
+	<if test="orgPinyin != null and orgPinyin !=''">
+		AND o.pinyin = #{orgPinyin,jdbcType=VARCHAR}
+	</if>
+	<if test="orgName != null and orgName !=''">
+		AND o.name = #{orgName,jdbcType=VARCHAR}
+	</if>
+	
+	<!-- 组织机构名称模糊查询 -->
+	<if test="fuzzyOrgName != null and fuzzyOrgName != '' ">
+	   and o.name LIKE CONCAT(CONCAT('%', #{fuzzyOrgName}),'%')
+	</if>
+	
+	<!-- 模糊查询 -->
+     <!-- <if test="keywords != null and keywords != ''">
+	   and u.user_name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	   or
+	   u.login_name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+     </if> -->
+	 <!-- 排序语句  choose始终执行一个 -->
+     <choose>
+     	<when test="orderLoginName != null and orderLoginName == 1 ">
+			order by u.login_name ASC
+     	</when>
+     	<when test="orderLoginName != null and orderLoginName == 2 ">
+			order by u.login_name DESC
+     	</when>
+     	<when test="orderUserName != null and orderUserName == 1 ">
+			order by convert(substr(u.user_name,1,1) using 'GBK') ASC
+     	</when>
+     	<when test="orderUserName != null and orderUserName == 2 ">
+			order by convert(substr(u.user_name,1,1) using 'GBK') DESC
+     	</when>
+     	<when test="orderOrgName != null and orderOrgName == 1 ">
+			order by o.pinyin ASC
+     	</when>
+     	<when test="orderOrgName != null and orderOrgName == 2 ">
+			order by o.pinyin DESC
+     	</when>
+     	<!-- 正常的查询，没有携带排序条件 -->
+     	<otherwise>
+     		
+     	</otherwise>
+     </choose>
+  </sql>
+  <sql id="Base_Column_List" >
+    user_id, user_name, login_name, login_pwd, auth_type, address, phone, tell, 
+    email, last_login_time, last_login_ip, login_error_times, create_time, creator_id, 
+    update_time, description, status, photo_path, order_name, order_org
+  </sql>
+  <!-- 用于用户管理的查询功能 --> 
+  <sql id="Base_Column_List2" >
+    u.user_id, u.user_name, u.login_name, u.login_pwd, u.auth_type, u.address, u.phone, u.tell, 
+    u.email, u.last_login_time, u.last_login_ip, u.login_error_times, u.create_time, 
+    (SELECT su.user_id FROM zst_user su WHERE su.user_id = u.creator_id) AS creator_id, 
+    u.update_time, u.description, u.status, u.photo_path, u.order_name, u.order_org, o.name, o.pinyin, ur.role_id as role_id_db
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    zst_user.user_id, user_name, login_name, login_pwd, auth_type, address, phone, tell, 
+    email, last_login_time, last_login_ip, login_error_times, zst_user.create_time, zst_user.creator_id, 
+    zst_user.update_time, zst_user.description, zst_user.status, photo_path, order_name, order_org,
+    zst_organization.org_id, zst_organization.name, zst_organization.pinyin
+    from zst_user
+    left join zst_org_user on zst_org_user.user_id = zst_user.user_id
+    left join zst_organization on zst_organization.org_id = zst_org_user.org_id
+    where zst_user.user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  <!--查询总和  -->
+  <select id="selectCountByObj" parameterType="sysUser" resultType="long">
+	SELECT COUNT(1) COUN FROM zst_user u 
+	<if test=" (orgName != null and orgName !='') or (orgId != null) or (fuzzyOrgName != null and fuzzyOrgName != '') ">
+		LEFT JOIN zst_org_user ou ON u.user_id=ou.user_id
+		LEFT JOIN zst_organization o ON ou.org_id = o.org_id
+	</if>
+	<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="sysUser" resultMap="BaseResultMap">		
+	select 
+	<include refid="Base_Column_List2"></include>
+	from zst_user as u
+	LEFT JOIN zst_org_user ou ON u.user_id=ou.user_id
+	LEFT JOIN zst_organization o ON ou.org_id = o.org_id
+	LEFT JOIN zst_user_role ur ON u.user_id = ur.user_id
+	<include refid="Example_Where_Clause" />
+	<if test="pagestart>-1 and pageend>0">
+		limit #{pagestart},#{pageend}
+	</if>
+  </select>
+  <!--根据登录名查询  -->
+  <select id="selectListByLoginName" parameterType="sysUser" resultMap="BaseResultMap">		
+	select 
+	<include refid="Base_Column_List" />
+	from zst_user as u 
+	<include refid="Example_Where_Clause" /> 
+  </select>
+  
+  <!-- start携带子部门查询 -->
+  <!-- 携带子部门查询专用sql -->
+  <sql id="Example_Where_Clause_Subsearch">
+	where 1=1
+	<if test="user.userId != null ">
+		AND u.user_id = #{user.userId,jdbcType=INTEGER}
+	</if>
+	<if test="user.userName != null and user.userName !=''">
+		AND u.user_name = #{user.userName,jdbcType=VARCHAR}
+	</if>
+	<if test="user.loginName != null and user.loginName !=''">
+		AND u.login_name = #{user.loginName,jdbcType=VARCHAR}
+	</if>
+	
+	<!-- 用户名模糊查询 -->
+	<if test="user.fuzzyLoginName != null and user.fuzzyLoginName != ''">
+	   and u.login_name LIKE CONCAT(CONCAT('%', #{user.fuzzyLoginName}),'%')
+	</if>
+	
+	<!-- 姓名模糊查询 -->
+	<if test="user.fuzzyUserName != null and user.fuzzyUserName != ''">
+	   and u.user_name LIKE CONCAT(CONCAT('%', #{user.fuzzyUserName}),'%')
+	</if>
+	
+	
+	<if test="user.loginPwd != null and user.loginPwd !=''">
+		AND u.login_pwd = #{user.loginPwd,jdbcType=VARCHAR}
+	</if>
+	<if test="user.phone != null and user.phone !=''">
+		AND u.phone = #{user.phone,jdbcType=VARCHAR}
+	</if>
+	<if test="user.status != null ">
+		AND u.status = #{user.status,jdbcType=INTEGER}
+	</if>
+	<if test="user.orgName != null and user.orgName !=''">
+		AND o.name = #{user.orgName,jdbcType=VARCHAR}
+	</if>
+	<if test="user.orgPinyin != null and user.orgPinyin !=''">
+		AND o.pinyin = #{user.orgPinyin,jdbcType=VARCHAR}
+	</if>
+	
+	<!-- 部门单点摘出来 -->
+	<if test="user.orgId == null ">
+		AND o.org_id in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item,jdbcType=INTEGER}
+			</foreach>
+	</if>
+	
+	<!-- 模糊查询 -->
+     <!-- <if test="keywords != null and keywords != ''">
+	   and u.user_name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	   or
+	   u.login_name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+     </if> -->
+	 <!-- 排序语句  choose始终执行一个 -->
+     <choose>
+     	<when test="user.orderLoginName != null and user.orderLoginName == 1 ">
+			order by u.login_name ASC
+     	</when>
+     	<when test="user.orderLoginName != null and user.orderLoginName == 2 ">
+			order by u.login_name DESC
+     	</when>
+     	<when test="user.orderUserName != null and user.orderUserName == 1 ">
+			order by convert(substr(u.user_name,1,1) using 'GBK') ASC
+     	</when>
+     	<when test="user.orderUserName != null and user.orderUserName == 2 ">
+			order by convert(substr(u.user_name,1,1) using 'GBK') DESC
+     	</when>
+     	<when test="user.orderOrgName != null and user.orderOrgName == 1 ">
+			order by o.pinyin ASC
+     	</when>
+     	<when test="user.orderOrgName != null and user.orderOrgName == 2 ">
+			order by o.pinyin DESC
+     	</when>
+     	<!-- 正常的查询，没有携带排序条件 -->
+     	<otherwise>
+     		
+     	</otherwise>
+     </choose>
+  </sql>
+   <!--携带子部门查询总和  -->
+  <select id="selectCountByMap" parameterType="java.util.Map" resultType="long">
+	SELECT COUNT(1) COUN FROM zst_user u 
+	<if test=" (user.orgName != null and user.orgName !='') or (user.orgId == null) ">
+		LEFT JOIN zst_org_user ou ON u.user_id=ou.user_id
+		LEFT JOIN zst_organization o ON ou.org_id = o.org_id
+	</if>
+	<include refid="Example_Where_Clause_Subsearch" />
+  </select>
+  <!--携带子部门分页查询  -->
+  <select id="selectListByMap" parameterType="java.util.Map" resultMap="BaseResultMap">		
+	select 
+	<include refid="Base_Column_List2"></include>
+	from zst_user as u
+	LEFT JOIN zst_org_user ou ON u.user_id=ou.user_id
+	LEFT JOIN zst_organization o ON ou.org_id = o.org_id
+	LEFT JOIN zst_user_role ur ON u.user_id = ur.user_id
+	<include refid="Example_Where_Clause_Subsearch" />
+	<if test="user.pagestart>-1 and user.pageend>0">
+		limit #{user.pagestart},#{user.pageend}
+	</if>
+  </select>
+  <!-- end携带子部门查询 -->
+  
+  <!-- 通过角色查询用户信息 -->
+  <select id="selectListByRoleId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select
+	  		zst_user.user_id, user_name, login_name, login_pwd, auth_type, address, phone, tell, 
+		    email, last_login_time, last_login_ip, login_error_times, zst_user.create_time, zst_user.creator_id, 
+		    zst_user.update_time, zst_user.description, zst_user.status, photo_path, order_name, order_org,
+		    zst_organization.org_id, zst_organization.name
+	    from zst_user
+	    left join zst_org_user on zst_org_user.user_id = zst_user.user_id
+	    left join zst_organization on zst_organization.org_id = zst_org_user.org_id
+  		where
+  			zst_user.status = 1
+  		and
+	  		zst_user.user_id in
+	  		(select zst_user_role.user_id from zst_user_role where zst_user_role.role_id = #{roleId,jdbcType=INTEGER})
+  </select>
+  
+  <!-- 批量查询 in -->
+  <select id="selectListByIdList" resultMap="BaseResultMap" parameterType="java.util.List">
+	select
+	  		zst_user.user_id, user_name, login_name, login_pwd, auth_type, address, phone, tell, 
+		    email, last_login_time, last_login_ip, login_error_times, zst_user.create_time, zst_user.creator_id, 
+		    zst_user.update_time, zst_user.description, zst_user.status, photo_path, order_name, order_org,
+		    zst_organization.org_id, zst_organization.name
+	    from zst_user
+	    left join zst_org_user on zst_org_user.user_id = zst_user.user_id
+	    left join zst_organization on zst_organization.org_id = zst_org_user.org_id
+  		where
+  		zst_user.status = 1
+  		and
+  		zst_user.user_id in
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </select>
+  
+  <!-- 通过用户名查询该用户角色-->
+  <select id="selectRoleByLoginName" parameterType="java.lang.String" resultType="java.util.HashMap">
+  	select r.role_id,r.role_name 
+  	FROM zst_user u 
+		LEFT JOIN zst_user_role ur ON u.user_id = ur.user_id
+		LEFT JOIN zst_role r ON ur.role_id = r.role_id
+	WHERE u.user_id=#{userId,jdbcType=INTEGER} and r.status=1
+  </select>
+  <!-- 通过用户名查询未授权的角色 -->
+  <select id="selectUnRoleByLoginName" parameterType="java.lang.String" resultType="java.util.HashMap">
+  	SELECT r.role_id,r.role_name  
+  		FROM zst_role r where not EXISTS 
+	  	(SELECT role_id FROM
+	  		( select ur.role_id FROM zst_user u  LEFT JOIN zst_user_role ur ON u.user_id=ur.user_id WHERE u.user_id=#{userId,jdbcType=VARCHAR} ) t 
+	  	WHERE t.role_id=r.role_id) AND r.status=1
+  </select>
+  
+  <!--0131 start分配用户多条件查询 -->
+  	  <!-- 定义基础信息 -->
+  	    <resultMap id="BaseResultRoleMap" type="zst.core.entity.SysUser" >
+		    <id column="user_id" property="userId" jdbcType="INTEGER" />
+		    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+		    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		    <result column="login_pwd" property="loginPwd" jdbcType="VARCHAR" />
+		    <result column="auth_type" property="authType" jdbcType="VARCHAR" />
+		    <result column="address" property="address" jdbcType="VARCHAR" />
+		    <result column="phone" property="phone" jdbcType="VARCHAR" />
+		    <result column="tell" property="tell" jdbcType="VARCHAR" />
+		    <result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+		    <result column="description" property="description" jdbcType="VARCHAR" />
+		    <result column="status" property="status" jdbcType="INTEGER" />
+		    <result column="photo_path" property="photoPath" jdbcType="VARCHAR" />
+		    <result column="order_name" property="orderName" jdbcType="INTEGER" />
+		    <result column="order_org" property="orderOrg" jdbcType="INTEGER" />
+		    <!-- 扩展属性 -->
+		    <result column="org_id" property="orgId" jdbcType="INTEGER"/>
+		    <result column="name" property="orgName" jdbcType="VARCHAR"/>
+		    <result column="pinyin" property="orgPinyin" jdbcType="INTEGER"/>
+		    
+		    <!--角色信息  -->
+		    <result column="role_id" property="globalRoleId" jdbcType="VARCHAR"/>
+		 </resultMap>
+		 <!-- 角色 -->
+	   <sql id="Base_Column_List_Role" >
+		    distinct u.user_id, u.user_name, u.login_name, u.login_pwd, u.auth_type, u.address, u.phone, u.tell, 
+		    u.creator_id, 
+		    u.description, u.status, u.photo_path, u.order_name, u.order_org, o.name, o.pinyin,
+		    ur.role_id
+	    </sql>
+	  <sql id="Example_Where_Clause_Subsearch_Role">
+		where 1=1
+		<if test="user.userId != null ">
+			AND u.user_id = #{user.userId,jdbcType=INTEGER}
+		</if>
+		<if test="user.userName != null and user.userName !=''">
+			AND u.user_name = #{user.userName,jdbcType=VARCHAR}
+		</if>
+		<if test="user.loginName != null and user.loginName !=''">
+			AND u.login_name = #{user.loginName,jdbcType=VARCHAR}
+		</if>
+		
+		<!-- 用户名模糊查询 -->
+		<if test="user.fuzzyLoginName != null and user.fuzzyLoginName != ''">
+		   and u.login_name LIKE CONCAT(CONCAT('%', #{user.fuzzyLoginName}),'%')
+		</if>
+		
+		<!-- 姓名模糊查询 -->
+		<if test="user.fuzzyUserName != null and user.fuzzyUserName != ''">
+		   and u.user_name LIKE CONCAT(CONCAT('%', #{user.fuzzyUserName}),'%')
+		</if>
+		
+		<if test="user.loginPwd != null and user.loginPwd !=''">
+			AND u.login_pwd = #{user.loginPwd,jdbcType=VARCHAR}
+		</if>
+		<if test="user.phone != null and user.phone !=''">
+			AND u.phone = #{user.phone,jdbcType=VARCHAR}
+		</if>
+		<if test="user.status != null ">
+			AND u.status = #{user.status,jdbcType=INTEGER}
+		</if>
+		<if test="user.orgName != null and user.orgName !=''">
+			AND o.name = #{user.orgName,jdbcType=VARCHAR}
+		</if>
+		<if test="user.orgPinyin != null and user.orgPinyin !=''">
+			AND o.pinyin = #{user.orgPinyin,jdbcType=VARCHAR}
+		</if>
+		
+		<!-- 部门单点摘出来 -->
+		<if test="user.orgId == null ">
+			AND o.org_id in
+				<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+					#{item,jdbcType=INTEGER}
+				</foreach>
+		</if>
+		
+		<!-- 角色 -->
+		<!-- 已分配的用户 -->
+		<if test="user.globalRoleId != null and user.oppositeRoleId == null ">
+		    AND ur.role_id = #{user.globalRoleId,jdbcType=INTEGER}
+		</if>
+		<!-- 未分配的用户 -->
+		<if test="user.globalRoleId == null and user.oppositeRoleId != null ">
+			AND ur.role_id is null
+		</if>
+		<!-- <if test="user.globalRoleId == null and user.oppositeRoleId != null ">
+			AND (<![CDATA[ ur.role_id <> #{user.oppositeRoleId,jdbcType=INTEGER} ]]> or ur.role_id is null)
+		</if> -->		<!-- 0205注释，一个用户只分配一个角色 -->
+		
+		<!-- 模糊查询 -->
+	     <!-- <if test="keywords != null and keywords != ''">
+		   and u.user_name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+		   or
+		   u.login_name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+	     </if> -->
+		 <!-- 排序语句  choose始终执行一个 -->
+	     <choose>
+	     	<when test="user.orderLoginName != null and user.orderLoginName == 1 ">
+				order by u.login_name ASC
+	     	</when>
+	     	<when test="user.orderLoginName != null and user.orderLoginName == 2 ">
+				order by u.login_name DESC
+	     	</when>
+	     	<when test="user.orderUserName != null and user.orderUserName == 1 ">
+				order by convert(substr(u.user_name,1,1) using 'GBK') ASC
+	     	</when>
+	     	<when test="user.orderUserName != null and user.orderUserName == 2 ">
+				order by convert(substr(u.user_name,1,1) using 'GBK') DESC
+	     	</when>
+	     	<when test="user.orderOrgName != null and user.orderOrgName == 1 ">
+				order by o.pinyin ASC
+	     	</when>
+	     	<when test="user.orderOrgName != null and user.orderOrgName == 2 ">
+				order by o.pinyin DESC
+	     	</when>
+	     	<!-- 正常的查询，没有携带排序条件 -->
+	     	<otherwise>
+	     		
+	     	</otherwise>
+	     </choose>
+	  </sql>
+	    <sql id="Example_Where_Clause_Role">
+			where 1=1
+			<if test="userId != null ">
+				AND u.user_id = #{userId,jdbcType=INTEGER}
+			</if>
+			<if test="userName != null and userName !=''">
+				AND u.user_name = #{userName,jdbcType=VARCHAR}
+			</if>
+			<if test="loginName != null and loginName !=''">
+				AND u.login_name = #{loginName,jdbcType=VARCHAR}
+			</if>
+			
+			<!-- 用户名模糊查询 -->
+			<if test="fuzzyLoginName != null and fuzzyLoginName != ''">
+			   and u.login_name LIKE CONCAT(CONCAT('%', #{fuzzyLoginName}),'%')
+			</if>
+			
+			<!-- 姓名模糊查询 -->
+			<if test="fuzzyUserName != null and fuzzyUserName != ''">
+			   and u.user_name LIKE CONCAT(CONCAT('%', #{fuzzyUserName}),'%')
+			</if>
+			
+			<if test="loginPwd != null and loginPwd !=''">
+				AND u.login_pwd = #{loginPwd,jdbcType=VARCHAR}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND u.phone = #{phone,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null ">
+				AND u.status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="orgId != null ">
+				AND o.org_id = #{orgId,jdbcType=INTEGER}
+			</if>
+			<if test="orgPinyin != null and orgPinyin !=''">
+				AND o.pinyin = #{orgPinyin,jdbcType=VARCHAR}
+			</if>
+			<if test="orgName != null and orgName !=''">
+				AND o.name = #{orgName,jdbcType=VARCHAR}
+			</if>
+			
+			<!-- 组织机构名称模糊查询 -->
+			<if test="fuzzyOrgName != null and fuzzyOrgName != '' ">
+			   and o.name LIKE CONCAT(CONCAT('%', #{fuzzyOrgName}),'%')
+			</if>
+			
+			<!-- 角色 -->
+			<!-- 已分配的用户 -->
+			<if test="globalRoleId != null and oppositeRoleId == null ">
+			    AND ur.role_id = #{globalRoleId,jdbcType=INTEGER}
+			</if>
+			<if test="globalRoleId == null and oppositeRoleId != null ">
+				AND ur.role_id is null
+			</if>
+			<!-- <if test="globalRoleId == null and oppositeRoleId != null ">
+				AND (<![CDATA[ ur.role_id <> #{oppositeRoleId,jdbcType=INTEGER} ]]> or ur.role_id is null)
+			</if> --><!-- 0205注释，一个角色只分配一个用户 -->
+			
+			<!-- 模糊查询 -->
+		     <!-- <if test="keywords != null and keywords != ''">
+			   and u.user_name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+			   or
+			   u.login_name LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+		     </if> -->
+			 <!-- 排序语句  choose始终执行一个 -->
+		     <choose>
+		     	<when test="orderLoginName != null and orderLoginName == 1 ">
+					order by u.login_name ASC
+		     	</when>
+		     	<when test="orderLoginName != null and orderLoginName == 2 ">
+					order by u.login_name DESC
+		     	</when>
+		     	<when test="orderUserName != null and orderUserName == 1 ">
+					order by convert(substr(u.user_name,1,1) using 'GBK') ASC
+		     	</when>
+		     	<when test="orderUserName != null and orderUserName == 2 ">
+					order by convert(substr(u.user_name,1,1) using 'GBK') DESC
+		     	</when>
+		     	<when test="orderOrgName != null and orderOrgName == 1 ">
+					order by o.pinyin ASC
+		     	</when>
+		     	<when test="orderOrgName != null and orderOrgName == 2 ">
+					order by o.pinyin DESC
+		     	</when>
+		     	<!-- 正常的查询，没有携带排序条件 -->
+		     	<otherwise>
+		     		
+		     	</otherwise>
+		     </choose>
+		 </sql>
+	
+  	  <!--携带子部门查询总和 已分配和未分配角色    start  -->
+	  <select id="selectCountAllocateByMap" parameterType="java.util.Map" resultType="long">
+		SELECT COUNT(distinct u.user_id) COUN FROM zst_user u 
+		<if test=" (user.orgName != null and user.orgName !='') or (user.orgId == null) ">
+			LEFT JOIN zst_org_user ou ON u.user_id=ou.user_id
+			LEFT JOIN zst_organization o ON ou.org_id = o.org_id
+		</if>
+		LEFT JOIN zst_user_role ur on ur.user_id = u.user_id
+		<include refid="Example_Where_Clause_Subsearch_Role" />
+	  </select>
+	  <!--携带子部门分页查询角色end  -->
+	  <select id="selectListAllocateByMap" parameterType="java.util.Map" resultMap="BaseResultRoleMap">		
+		select 
+		<include refid="Base_Column_List_Role" />
+		from zst_user as u
+		LEFT JOIN zst_org_user ou ON u.user_id=ou.user_id
+		LEFT JOIN zst_organization o ON ou.org_id = o.org_id
+		LEFT JOIN zst_user_role ur on ur.user_id = u.user_id
+		<include refid="Example_Where_Clause_Subsearch_Role" />
+		<if test="user.pagestart>-1 and user.pageend>0">
+			limit #{user.pagestart},#{user.pageend}
+		</if>
+	  </select>
+  
+  
+  	  <!-- 查一个部门查询总和带角色  -->
+	  <select id="selectCountByRoleObj" parameterType="sysUser" resultType="long">
+		SELECT COUNT(distinct u.user_id) COUN FROM zst_user u 
+		<if test=" (orgName != null and orgName !='') or (orgId != null) or (fuzzyOrgName != null and fuzzyOrgName != '') ">
+			LEFT JOIN zst_org_user ou ON u.user_id=ou.user_id
+			LEFT JOIN zst_organization o ON ou.org_id = o.org_id
+			LEFT JOIN zst_user_role ur on ur.user_id = u.user_id
+		</if>
+		<include refid="Example_Where_Clause_Role" />
+	  </select>
+	  <!-- 查一个部门分页查询，带角色  -->
+	  <select id="selectListByRoleObj" parameterType="sysUser" resultMap="BaseResultRoleMap">		
+		select 
+		<include refid="Base_Column_List_Role" />
+		from zst_user as u
+		LEFT JOIN zst_org_user ou ON u.user_id=ou.user_id
+		LEFT JOIN zst_organization o ON ou.org_id = o.org_id
+		LEFT JOIN zst_user_role ur on ur.user_id = u.user_id
+		<include refid="Example_Where_Clause_Role" />
+		<if test="pagestart>-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+	  </select>
+  
+  <!-- 0121end分配用户多条件查询 -->
+  
+ 	  <!-- 根据用户id查询用户的客户端和管理端的权限 -->
+	  <select id="selectFuntGroupByUser" parameterType="sysUser" resultType="java.lang.Integer">		
+		SELECT
+			DISTINCT zst_category_funt.funt_group as funt_group
+		FROM
+			zst_category_funt
+		WHERE
+			zst_category_funt.category_id IN (
+				SELECT
+					zst_role.category_id
+				FROM
+					zst_role
+				WHERE
+					zst_role.role_id IN (
+						SELECT
+							zst_user_role.role_id
+						FROM
+							zst_user_role
+						WHERE
+							zst_user_role.user_id IN (
+								SELECT
+									zst_user.user_id
+								FROM
+									zst_user
+								WHERE
+									zst_user.status = #{status,jdbcType=INTEGER}
+								AND zst_user.login_name = #{loginName,jdbcType=VARCHAR}
+							)
+					)
+			)
+	  </select>
+  
+  <!-- 批量更新状态 -->
+  <update id="updateBatchByUserIds" parameterType="java.util.List">
+	update zst_user SET status = '0'  WHERE user_id in 
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		#{item}
+	</foreach>
+  </update>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zst_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.SysUser" >
+    insert into zst_user (user_id, user_name, login_name, 
+      login_pwd, auth_type,
+      address, phone, tell, 
+      email, last_login_time, last_login_ip, 
+      login_error_times, create_time, creator_id, 
+      update_time, description, status, 
+      photo_path, order_name, order_org
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
+      #{loginPwd,jdbcType=VARCHAR}, #{authType,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{tell,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR}, 
+      #{loginErrorTimes,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{photoPath,jdbcType=VARCHAR}, #{orderName,jdbcType=INTEGER}, #{orderOrg,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.SysUser" useGeneratedKeys="true" keyProperty="userId">
+    insert into zst_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="loginPwd != null" >
+        login_pwd,
+      </if>
+      <if test="authType != null" >
+        auth_type,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="tell != null" >
+        tell,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time,
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip,
+      </if>
+      <if test="loginErrorTimes != null" >
+        login_error_times,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="photoPath != null" >
+        photo_path,
+      </if>
+      <if test="orderName != null" >
+        order_name,
+      </if>
+      <if test="orderOrg != null" >
+        order_org,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null" >
+        #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="authType != null" >
+        #{authType,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="tell != null" >
+        #{tell,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginIp != null" >
+        #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginErrorTimes != null" >
+        #{loginErrorTimes,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="photoPath != null" >
+        #{photoPath,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null" >
+        #{orderName,jdbcType=INTEGER},
+      </if>
+      <if test="orderOrg != null" >
+        #{orderOrg,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.SysUser" >
+    update zst_user
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null" >
+        login_pwd = #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="authType != null" >
+        auth_type = #{authType,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="tell != null" >
+        tell = #{tell,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginErrorTimes != null" >
+        login_error_times = #{loginErrorTimes,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="photoPath != null" >
+        photo_path = #{photoPath,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null" >
+        order_name = #{orderName,jdbcType=INTEGER},
+      </if>
+      <if test="orderOrg != null" >
+        order_org = #{orderOrg,jdbcType=INTEGER},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.SysUser" >
+    update zst_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      login_pwd = #{loginPwd,jdbcType=VARCHAR},
+      auth_type = #{authType,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      tell = #{tell,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      login_error_times = #{loginErrorTimes,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      photo_path = #{photoPath,jdbcType=VARCHAR},
+      order_name = #{orderName,jdbcType=INTEGER},
+      order_org = #{orderOrg,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

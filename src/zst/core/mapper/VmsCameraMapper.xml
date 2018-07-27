@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="zst.core.dao.VmsCameraMapper" >
+  <resultMap id="BaseResultMap" type="zst.core.entity.VmsCamera" >
+    <id column="camera_id" property="cameraId" jdbcType="INTEGER" />
+    <result column="no" property="no" jdbcType="INTEGER" />
+    <result column="zoom" property="zoom" jdbcType="INTEGER" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="deviceLogin_id" property="deviceloginCameraId" jdbcType="INTEGER" />
+    <result column="resCode" property="rescode" jdbcType="VARCHAR" />
+    <result column="resType" property="restype" jdbcType="INTEGER" />
+    <result column="resSubType" property="ressubtype" jdbcType="INTEGER" />
+    <result column="resStatus" property="resstatus" jdbcType="INTEGER" />
+    <result column="resExtStatus" property="resextstatus" jdbcType="INTEGER" />
+    <result column="resShareFlag" property="resshareflag" jdbcType="INTEGER" />
+    <result column="resForeignFlag" property="resforeignflag" jdbcType="INTEGER" />
+    <result column="resStreamNum" property="resstreamnum" jdbcType="INTEGER" />
+    <result column="customeType" property="custometype" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    camera_id, no, zoom, longitude, latitude, deviceLogin_id, resCode, resType, resSubType, 
+    resStatus, resExtStatus, resShareFlag, resForeignFlag, resStreamNum, 
+    customeType
+  </sql>
+  
+    <sql id="Example_Where_Clause">
+	where 1=1
+	<if test="cameraId != null ">
+		AND camera_id = #{cameraId,jdbcType=INTEGER}
+	</if>
+	<if test="no != null ">
+		AND no = #{no,jdbcType=INTEGER}
+	</if>
+	<if test="zoom != null ">
+		AND zoom = #{zoom,jdbcType=INTEGER}
+	</if>
+	<if test="longitude != null ">
+		AND longitude = #{longitude,jdbcType=DOUBLE}
+	</if>
+	<if test="latitude != null ">
+		AND latitude = #{latitude,jdbcType=DOUBLE}
+	</if>
+	<if test="deviceloginCameraId != null ">
+		AND deviceLogin_id = #{deviceloginCameraId,jdbcType=INTEGER}
+	</if>
+	<if test="rescode != null ">
+		AND resCode = #{rescode,jdbcType=VARCHAR}
+	</if>
+	<if test="restype != null ">
+		AND resType = #{restype,jdbcType=INTEGER}
+	</if>
+	<if test="ressubtype != null ">
+		AND resSubType = #{ressubtype,jdbcType=INTEGER}
+	</if>
+	<if test="resstatus != null ">
+		AND resStatus = #{resstatus,jdbcType=INTEGER}
+	</if>
+	<if test="resextstatus != null ">
+		AND resExtStatus = #{resextstatus,jdbcType=INTEGER}
+	</if>
+	<if test="resshareflag != null ">
+		AND resShareFlag = #{resshareflag,jdbcType=INTEGER}
+	</if>
+	<if test="resforeignflag != null ">
+		AND resForeignFlag = #{resforeignflag,jdbcType=INTEGER}
+	</if>
+	<if test="resstreamnum != null ">
+		AND resStreamNum = #{resstreamnum,jdbcType=INTEGER}
+	</if>
+	<if test="custometype != null ">
+		AND customeType = #{custometype,jdbcType=INTEGER}
+	</if>
+  </sql>
+  
+  <!--查询条数  -->
+  <select id="selectCountByObj" parameterType="zst.core.entity.VmsCamera" resultType="long">
+		SELECT COUNT(1) COUN FROM vms_camera
+		<include refid="Example_Where_Clause" />
+  </select>
+  <!--分页查询  -->
+  <select id="selectListByObj" parameterType="zst.core.entity.VmsCamera" resultMap="BaseResultMap">		
+		select <include refid="Base_Column_List" />
+			from vms_camera
+		<include refid="Example_Where_Clause" />
+		<if test="pagestart >-1 and pageend>0">
+			limit #{pagestart},#{pageend}
+		</if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from vms_camera
+    where camera_id = #{cameraId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from vms_camera
+    where camera_id = #{cameraId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="zst.core.entity.VmsCamera" >
+    insert into vms_camera (camera_id, no, zoom, 
+      longitude, latitude, deviceLogin_id, 
+      resCode, resType, resSubType, 
+      resStatus, resExtStatus, resShareFlag, 
+      resForeignFlag, resStreamNum, 
+      customeType)
+    values (#{cameraId,jdbcType=INTEGER}, #{no,jdbcType=INTEGER}, #{zoom,jdbcType=INTEGER}, 
+      #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, #{deviceloginCameraId,jdbcType=INTEGER}, 
+      #{rescode,jdbcType=VARCHAR}, #{restype,jdbcType=INTEGER}, #{ressubtype,jdbcType=INTEGER}, 
+      #{resstatus,jdbcType=INTEGER}, #{resextstatus,jdbcType=INTEGER}, #{resshareflag,jdbcType=INTEGER}, 
+      #{resforeignflag,jdbcType=INTEGER}, #{resstreamnum,jdbcType=INTEGER},
+      #{custometype,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="zst.core.entity.VmsCamera" >
+    insert into vms_camera
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cameraId != null" >
+        camera_id,
+      </if>
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="zoom != null" >
+        zoom,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="deviceloginCameraId != null" >
+        deviceLogin_id,
+      </if>
+      <if test="rescode != null" >
+        resCode,
+      </if>
+      <if test="restype != null" >
+        resType,
+      </if>
+      <if test="ressubtype != null" >
+        resSubType,
+      </if>
+      <if test="resstatus != null" >
+        resStatus,
+      </if>
+      <if test="resextstatus != null" >
+        resExtStatus,
+      </if>
+      <if test="resshareflag != null" >
+        resShareFlag,
+      </if>
+      <if test="resforeignflag != null" >
+        resForeignFlag,
+      </if>
+      <if test="resstreamnum != null" >
+        resStreamNum,
+      </if>
+      <if test="custometype != null" >
+        customeType,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cameraId != null" >
+        #{cameraId,jdbcType=INTEGER},
+      </if>
+      <if test="no != null" >
+        #{no,jdbcType=INTEGER},
+      </if>
+      <if test="zoom != null" >
+        #{zoom,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="deviceloginCameraId != null" >
+        #{deviceloginCameraId,jdbcType=INTEGER},
+      </if>
+      <if test="rescode != null" >
+        #{rescode,jdbcType=VARCHAR},
+      </if>
+      <if test="restype != null" >
+        #{restype,jdbcType=INTEGER},
+      </if>
+      <if test="ressubtype != null" >
+        #{ressubtype,jdbcType=INTEGER},
+      </if>
+      <if test="resstatus != null" >
+        #{resstatus,jdbcType=INTEGER},
+      </if>
+      <if test="resextstatus != null" >
+        #{resextstatus,jdbcType=INTEGER},
+      </if>
+      <if test="resshareflag != null" >
+        #{resshareflag,jdbcType=INTEGER},
+      </if>
+      <if test="resforeignflag != null" >
+        #{resforeignflag,jdbcType=INTEGER},
+      </if>
+      <if test="resstreamnum != null" >
+        #{resstreamnum,jdbcType=INTEGER},
+      </if>
+      <if test="custometype != null" >
+        #{custometype,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="zst.core.entity.VmsCamera" >
+    update vms_camera
+    <set >
+      <if test="no != null" >
+        no = #{no,jdbcType=INTEGER},
+      </if>
+      <if test="zoom != null" >
+        zoom = #{zoom,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="deviceloginCameraId != null" >
+        deviceLogin_id = #{deviceloginCameraId,jdbcType=INTEGER},
+      </if>
+      <if test="rescode != null" >
+        resCode = #{rescode,jdbcType=VARCHAR},
+      </if>
+      <if test="restype != null" >
+        resType = #{restype,jdbcType=INTEGER},
+      </if>
+      <if test="ressubtype != null" >
+        resSubType = #{ressubtype,jdbcType=INTEGER},
+      </if>
+      <if test="resstatus != null" >
+        resStatus = #{resstatus,jdbcType=INTEGER},
+      </if>
+      <if test="resextstatus != null" >
+        resExtStatus = #{resextstatus,jdbcType=INTEGER},
+      </if>
+      <if test="resshareflag != null" >
+        resShareFlag = #{resshareflag,jdbcType=INTEGER},
+      </if>
+      <if test="resforeignflag != null" >
+        resForeignFlag = #{resforeignflag,jdbcType=INTEGER},
+      </if>
+      <if test="resstreamnum != null" >
+        resStreamNum = #{resstreamnum,jdbcType=INTEGER},
+      </if>
+      <if test="custometype != null" >
+        customeType = #{custometype,jdbcType=INTEGER},
+      </if>
+    </set>
+    where camera_id = #{cameraId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="zst.core.entity.VmsCamera" >
+    update vms_camera
+    set no = #{no,jdbcType=INTEGER},
+      zoom = #{zoom,jdbcType=INTEGER},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      deviceLogin_id = #{deviceloginCameraId,jdbcType=INTEGER},
+      resCode = #{rescode,jdbcType=VARCHAR},
+      resType = #{restype,jdbcType=INTEGER},
+      resSubType = #{ressubtype,jdbcType=INTEGER},
+      resStatus = #{resstatus,jdbcType=INTEGER},
+      resExtStatus = #{resextstatus,jdbcType=INTEGER},
+      resShareFlag = #{resshareflag,jdbcType=INTEGER},
+      resForeignFlag = #{resforeignflag,jdbcType=INTEGER},
+      resStreamNum = #{resstreamnum,jdbcType=INTEGER},
+      customeType = #{custometype,jdbcType=INTEGER}
+    where camera_id = #{cameraId,jdbcType=INTEGER}
+  </update>
+</mapper>
